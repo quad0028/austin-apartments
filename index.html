@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin Apartments - Exclusive Hidden Deals</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --teal: #00839b; --teal-dark: #005f73; --teal-selected: #004d5c; --pink: #cb2d6f; --gold: #d4b254; --dark: #1a1a1a; --gray: #6b7280; --light: #f9fafb; --white: #ffffff; }
+        body { font-family: 'Outfit', sans-serif; background: var(--light); color: var(--dark); line-height: 1.5; overflow-x: hidden; }
+        
+        .top-nav { background: var(--dark); color: var(--white); padding: 0.75rem 2rem; border-bottom: 3px solid var(--teal); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .logo span { color: var(--teal); }
+        .nav-links { display: flex; gap: 2rem; font-size: 0.9rem; }
+        .nav-links a { color: var(--white); text-decoration: none; }
+        .nav-links a:hover { color: var(--teal); }
+        
+        .filter-bar { background: var(--white); padding: 1rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,131,155,0.1); }
+        .filter-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem; margin-bottom: 0.75rem; }
+        .filter-grid-row-2 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; }
+        .filter-group { display: flex; flex-direction: column; gap: 0.3rem; }
+        .filter-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray); }
+        .filter-input, .filter-select { padding: 0.55rem 0.7rem; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.85rem; background: var(--white); }
+        .filter-input:focus, .filter-select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,131,155,0.1); }
+        
+        .selected-areas-display { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; min-height: 24px; }
+        .selected-area-tag { display: inline-flex; align-items: center; gap: 0.25rem; background: var(--teal-selected); color: var(--white); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
+        .selected-area-tag button { background: none; border: none; color: var(--white); cursor: pointer; font-size: 0.9rem; line-height: 1; opacity: 0.8; }
+        .selected-area-tag button:hover { opacity: 1; }
+        .area-limit-note { font-size: 0.65rem; color: var(--gray); font-style: italic; }
+        
+        .main-container { display: flex; height: 100vh; width: 100%; }
+        .listings-panel { width: 32%; min-width: 380px; background: var(--light); overflow-y: auto; border-right: 1px solid #e5e7eb; padding-bottom: 80px; }
+        .listings-panel::-webkit-scrollbar { width: 6px; }
+        .listings-panel::-webkit-scrollbar-track { background: #f1f1f1; }
+        .listings-panel::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+        .properties-list { padding: 1rem; }
+        
+        .map-panel { flex: 1; position: relative; overflow: hidden; }
+        #map { width: 100%; height: 100%; position: relative; }
+        
+        /* Leaflet Zoom Controls - Top-left corner, simple and clean */
+        .leaflet-control-zoom {
+            position: absolute !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 400 !important;
+        }
+        
+        .leaflet-top.leaflet-left {
+            position: absolute !important;
+            top: 10px !important;
+            left: 10px !important;
+        }
+        
+        /* Checkmark icon for selected areas */
+        .area-checkmark {
+            background: var(--white);
+            border: 3px solid var(--teal-selected);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--teal-selected);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .property-card { background: var(--white); border-radius: 12px; padding: 1.15rem; margin-bottom: 0.9rem; border: 2px solid #e5e7eb; cursor: pointer; transition: all 0.3s; position: relative; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes refreshFade { 0% { opacity: 0.3; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .properties-list.refreshing { animation: refreshFade 0.3s ease-out; }
+        .property-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        
+        .property-card.rank-1 { background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border: 3px solid var(--teal); box-shadow: 0 8px 30px rgba(0,131,155,0.25); padding-top: 2.4rem; }
+        .property-card.rank-2 { background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border: 3px solid var(--teal); box-shadow: 0 6px 20px rgba(0,131,155,0.2); padding-top: 2.4rem; }
+        .property-card.rank-3 { background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border: 3px solid var(--teal); box-shadow: 0 6px 20px rgba(0,131,155,0.2); padding-top: 2.4rem; }
+        
+        /* Enhanced Premium Badge - Centered ON Border (Border Goes Through) */
+        .premium-badge { 
+            position: absolute; 
+            top: -14px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            padding: 0.45rem 0.9rem; 
+            border-radius: 6px; 
+            font-size: 0.68rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            text-align: center; 
+            white-space: nowrap;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 20;
+            line-height: 1.3;
+        }
+        .rank-1 .premium-badge { background: linear-gradient(135deg, #00839b 0%, #006b82 100%); color: var(--white); box-shadow: 0 5px 20px rgba(0,131,155,0.45); font-size: 0.7rem; padding: 0.5rem 1rem; }
+        .rank-2 .premium-badge { background: linear-gradient(135deg, var(--teal) 0%, #007a8f 100%); color: var(--white); box-shadow: 0 4px 18px rgba(0,131,155,0.4); }
+        .rank-3 .premium-badge { background: linear-gradient(135deg, var(--teal) 0%, #007a8f 100%); color: var(--white); box-shadow: 0 4px 18px rgba(0,131,155,0.4); }
+        
+        /* "Best For" Identity Tag - Subtle and compact */
+        .best-for-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            text-transform: none;
+            letter-spacing: 0.2px;
+            border: 1px solid rgba(255,255,255,0.25);
+            line-height: 1.2;
+        }
+        
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+        .property-info { flex: 1; }
+        .property-name { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 0.2rem; }
+        .rank-1 .property-name { font-size: 1.15rem; }
+        .property-location { font-size: 0.78rem; color: var(--gray); margin-bottom: 0.35rem; }
+        .property-meta { display: flex; gap: 0.6rem; font-size: 0.72rem; color: var(--gray); flex-wrap: wrap; align-items: center; }
+        .rating-badge { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 0.35rem 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        .rating-badge .rating-number { font-size: 1rem; }
+        .rating-badge .rating-label { font-size: 0.7rem; opacity: 0.9; font-weight: 600; }
+        .rating-badge { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 0.35rem 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.25rem; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        .rating-badge .rating-number { font-size: 1rem; }
+        .rating-badge .rating-label { font-size: 0.7rem; opacity: 0.9; font-weight: 600; }
+        
+        .class-badge { padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600; font-size: 0.65rem; }
+        .class-badge.class-a { background: #dcfce7; color: #166534; }
+        .class-badge.class-b { background: #fef3c7; color: #92400e; }
+        .class-badge.class-c { background: #fee2e2; color: #991b1b; }
+        
+        .year-info { display: inline-block; padding: 0.25rem 0.45rem; background: #f3f4f6; border-radius: 4px; font-size: 0.68rem; color: var(--gray); margin-bottom: 0.4rem; }
+        .specials-tag { display: inline-block; background: linear-gradient(135deg, var(--gold) 0%, #e6c55a 100%); color: #5c4a1f; padding: 0.3rem 0.55rem; border-radius: 6px; font-size: 0.68rem; font-weight: 600; margin-bottom: 0.6rem; }
+        
+        .discount-circle { width: 81px; height: 81px; border-radius: 50%; background: linear-gradient(135deg, var(--teal) 0%, #00a3c4 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--white); flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,131,155,0.3); border: 3px solid var(--white); position: relative; top: 6px; margin-right: -19px; }
+        .rank-1 .discount-circle { width: 94px; height: 94px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 15px rgba(203,45,111,0.4); }
+        .rank-2 .discount-circle { width: 88px; height: 88px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
+        .rank-3 .discount-circle { background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 15px rgba(203,45,111,0.3); }
+        .rank-3 .discount-circle .discount-percent, .rank-3 .discount-circle .discount-label { color: var(--white); }
+        .discount-percent { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+        .rank-1 .discount-percent { font-size: 1.5rem; }
+        .discount-label { font-size: 0.55rem; font-weight: 600; text-transform: uppercase; }
+        
+        .pricing-row { display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0; border-top: 1px solid #e5e7eb; margin-top: 0.4rem; }
+        .price-info { display: flex; flex-direction: column; }
+        .effective-price { font-size: 1.2rem; font-weight: 800; color: #000; }
+        .rank-1 .effective-price { font-size: 1.4rem; color: #000; }
+        .original-price { font-size: 0.78rem; color: var(--gray); text-decoration: line-through; }
+        .bedroom-pricing-note { display: inline-block; background: var(--teal); color: var(--white); font-size: 0.6rem; padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.4rem; font-weight: 600; vertical-align: middle; text-transform: uppercase; }
+        .rank-1 .bedroom-pricing-note { background: var(--pink); }
+        .savings-badge { background: #dcfce7; color: #166534; padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; }
+        .rank-1 .savings-badge { background: #dcfce7; color: #166534; font-size: 0.85rem; padding: 0.35rem 0.65rem; }
+        .savings-badge.no-special { background: #f3f4f6; color: #6b7280; font-weight: 500; }
+        .discount-circle.no-special { 
+    background: #e5e7eb; 
+    box-shadow: none;
+    border: 2px solid #d1d5db;
+}
+.discount-circle.no-special .discount-percent {
+    color: #6b7280;
+    font-size: 0.85rem !important;
+}
+        
+        .pricing-disclaimer { font-size: 0.65rem; color: #9ca3af; text-align: center; padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #e5e7eb; margin-top: 1rem; line-height: 1.4; }
+        
+        .card-actions { display: flex; gap: 0.4rem; margin-top: 0.65rem; }
+        .btn-compare, .btn-details { flex: 1; padding: 0.55rem; border: 2px solid var(--teal); background: var(--white); color: var(--teal); border-radius: 8px; font-family: inherit; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-compare:hover, .btn-details:hover { background: var(--teal); color: var(--white); }
+        /* ACTIVE STATE - Visual Checkbox Indicator */
+        .btn-compare.active { 
+            background: #059669 !important; 
+            background-color: #059669 !important;
+            color: #ffffff !important; 
+            border: 3px solid #059669 !important;
+            font-weight: 700 !important;
+            position: relative;
+        }
+        .btn-compare.active:hover { 
+            background: #047857 !important;
+            background-color: #047857 !important;
+        }
+        .btn-compare.active::before {
+            content: '✓';
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 1.1em;
+            font-weight: 900;
+        }
+        
+        .comparison-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark); color: var(--white); padding: 0.9rem 2rem; display: flex; justify-content: center; align-items: center; gap: 2rem; transform: translateY(100%); transition: transform 0.3s; z-index: 1500; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); }
+        .comparison-bar.active { transform: translateY(0); }
+        .comparison-bar span { font-weight: 600; font-size: 0.95rem; }
+        .comparison-bar button { padding: 0.65rem 1.75rem; background: var(--teal); color: var(--white); border: none; border-radius: 8px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .comparison-bar button:hover { background: var(--teal-dark); }
+        .comparison-bar .btn-clear { background: transparent; border: 2px solid var(--white); padding: 0.55rem 1.25rem; }
+        .comparison-bar .btn-clear:hover { background: rgba(255,255,255,0.1); }
+        
+        .mobile-map-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--teal); color: var(--white); border: none; padding: 0.9rem 1.4rem; border-radius: 50px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(0,131,155,0.4); z-index: 1200; }
+        .mobile-map-btn.has-comparison { bottom: 75px; }
+        
+        .mobile-map-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--white); z-index: 2000; }
+        .mobile-map-overlay.active { display: block; }
+        .mobile-map-header { background: var(--dark); color: var(--white); padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+        .mobile-map-header h3 { font-size: 1rem; }
+        .mobile-map-header button { background: var(--teal); color: var(--white); border: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-family: inherit; font-weight: 600; cursor: pointer; }
+        #mobileMap { width: 100%; height: calc(100% - 56px); }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 3000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 1rem; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--white); border-radius: 16px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; border: 2px solid #1a1a1a; }
+        .modal-header { background: linear-gradient(135deg, #d4b254 0%, #f4d67a 25%, #d4b254 50%, #c4a244 75%, #d4b254 100%); color: var(--white); padding: 1.25rem; border-radius: 16px 16px 0 0; border: 2px solid #1a1a1a; border-bottom: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2); }
+        .modal-header h2 { font-size: 1.25rem; margin-bottom: 0.2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .modal-header p { font-size: 0.85rem; opacity: 0.9; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+        .modal-body { padding: 1.25rem; }
+        .selected-properties-preview { background: var(--light); padding: 0.9rem; border-radius: 8px; margin-bottom: 1.25rem; }
+        .selected-properties-preview h3 { font-size: 0.8rem; color: var(--gray); margin-bottom: 0.6rem; }
+        .selected-property-item { padding: 0.4rem 0.6rem; background: var(--white); border-radius: 6px; margin-bottom: 0.4rem; font-size: 0.8rem; font-weight: 600; border-left: 3px solid var(--teal); }
+        .form-group { margin-bottom: 0.9rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; color: var(--dark); }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.85rem; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--teal); }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        .form-actions { display: flex; gap: 0.6rem; margin-top: 1.25rem; }
+        .btn-cancel { flex: 1; padding: 0.7rem; background: #e5e7eb; color: var(--gray); border: none; border-radius: 8px; font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .btn-cancel:hover { background: #d1d5db; }
+        .btn-submit { flex: 2; padding: 0.7rem; background: var(--teal); color: var(--white); border: none; border-radius: 8px; font-family: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .btn-submit:hover { background: var(--teal-dark); }
+        
+        .qualification-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 3000; opacity: 0; visibility: hidden; transition: all 0.3s; padding: 1rem; }
+        .qualification-modal.active { opacity: 1; visibility: visible; }
+        .qualification-content { background: var(--white); border-radius: 16px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .qualification-header { background: linear-gradient(135deg, var(--pink) 0%, #a82359 100%); color: var(--white); padding: 1.25rem; border-radius: 16px 16px 0 0; }
+        .qualification-header h2 { font-size: 1.2rem; }
+        .qualification-body { padding: 1.25rem; }
+        .warning-box { background: #fef2f2; border: 2px solid #fecaca; border-radius: 8px; padding: 0.9rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.5; color: #991b1b; }
+        .help-box { background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 8px; padding: 0.9rem; margin-bottom: 1rem; }
+        .help-box h3 { color: #166534; font-size: 0.9rem; margin-bottom: 0.6rem; }
+        .help-box ul { list-style: none; font-size: 0.8rem; color: #166534; }
+        .help-box ul li { padding: 0.3rem 0 0.3rem 1.1rem; position: relative; }
+        
+        .btn-help { width: 100%; padding: 0.8rem; background: var(--pink); color: var(--white); border: none; border-radius: 8px; font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.4rem; }
+        .btn-help:hover { background: #a82359; }
+        
+        .no-results { text-align: center; padding: 2.5rem 1rem; color: var(--gray); }
+        .no-results h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--dark); }
+        
+        .select-areas-prompt { text-align: center; padding: 3rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 12px; margin: 1rem; border: 2px dashed var(--teal); }
+        .select-areas-prompt h3 { color: var(--teal); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .select-areas-prompt p { color: var(--gray); font-size: 0.9rem; }
+        
+        .leaflet-popup-content-wrapper { border-radius: 10px; }
+        .leaflet-popup-content { margin: 10px 12px; font-family: 'Outfit', sans-serif; }
+        
+        .area-tooltip { font-family: 'Outfit', sans-serif; font-size: 0.85rem; padding: 8px 12px; max-width: 280px; }
+        .area-tooltip b { color: var(--teal-selected); font-size: 1rem; }
+        .area-tooltip ul { list-style-type: disc; margin: 0.4em 0 0.4em 0; padding-left: 1.2em; }
+        .area-tooltip li { margin-bottom: 0.2em; line-height: 1.4; }
+        
+        @media (max-width: 900px) {
+            .top-nav { padding: 0.6rem 1rem; }
+            .nav-links { display: none; }
+            .filter-bar { padding: 0.9rem 1rem; }
+            .filter-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .filter-grid-row-2 { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .main-container { flex-direction: column; height: auto; min-height: calc(100vh - 200px); overflow: visible !important; }
+            .listings-panel { width: 100%; min-width: auto; height: auto; min-height: 100vh; border-right: none; overflow: visible; padding-bottom: 100px; display: block !important; visibility: visible !important; }
+            .map-panel { display: none; }
+            .mobile-map-btn { display: flex; align-items: center; gap: 0.4rem; }
+            .comparison-bar { padding: 0.7rem 1rem; gap: 1rem; flex-wrap: wrap; }
+            .comparison-bar span { font-size: 0.85rem; }
+            .comparison-bar button { padding: 0.55rem 1.1rem; font-size: 0.8rem; }
+            .discount-circle { width: 69px; height: 69px; }
+            .rank-1 .discount-circle { width: 81px; height: 81px; }
+        .rank-2 .discount-circle { width: 88px; height: 88px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
+            .discount-percent { font-size: 1.1rem; }
+            .rank-1 .discount-percent { font-size: 1.3rem; }
+            .card-actions { flex-direction: column; }
+        }
+        @media (max-width: 480px) {
+            .filter-grid { grid-template-columns: 1fr; }
+            .filter-grid-row-2 { grid-template-columns: 1fr; }
+            .logo { font-size: 1.2rem; }
+            .property-name { font-size: 0.95rem; }
+            .rank-1 .property-name { font-size: 1.05rem; }
+            .effective-price { font-size: 1.05rem; }
+            .rank-1 .effective-price { font-size: 1.2rem; }
+        }
+        
+        /* PULSING ANIMATION for Top 3 Discount Circles */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 4px 15px rgba(203,45,111,0.4); 
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 8px 30px rgba(203,45,111,0.8); 
+            }
+        }
+        
+        .rank-1 .discount-circle,
+        .rank-2 .discount-circle,
+        .rank-3 .discount-circle {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Compare Checkbox Styling */
+        .compare-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem;
+            border: 2px solid var(--teal);
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .compare-checkbox-label:hover {
+            background: rgba(0,131,155,0.05);
+        }
+        .compare-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--teal);
+            border-radius: 4px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background: white;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .compare-checkbox:checked {
+            background: var(--teal);
+            border-color: var(--teal);
+        }
+        .compare-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .checkbox-text {
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .help-box ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0.5rem 0;
+        }
+        .help-box ul li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+        .help-box ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            
+            
+        .property-type-info-small {
+            position: fixed !important; /* Fixed positioning, doesn't affect layout */
+            z-index: 9999 !important; /* Very high z-index */
+            left: 20px;
+            top: 200px; /* Below filter bar */
+            max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            pointer-events: auto;
+            display: none; /* Hidden by default */
+        }
+        
+        .property-type-info-small.show-income-limits {
+            display: block !important; /* Show when class added */
+            background: rgba(212,178,84,0.95);
+            border: 2px solid var(--gold);
+            padding: 0;
+            border-radius: 8px;
+            color: #5c4a1f;
+        }
+        .property-type-info-small strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        /* Tax Credit Mode - Subtle Indicators */
+        body.tax-credit-mode .filter-bar {
+            border-left: 4px solid var(--gold);
+        }
+        body.tax-credit-mode #propertyTypeSelect {
+            border-color: var(--gold);
+            background: rgba(212,178,84,0.05);
+        }
+    
+        @media (max-width: 768px) {
+            .property-type-info-small {
+                left: 10px;
+                right: 10px;
+                top: 180px;
+                max-width: none;
+            }
+            
+            /* Sticky Compare Button on Mobile */
+            .compare-top-5-sticky {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 998;
+                background: linear-gradient(135deg, #cb2d6f 0%, #e84a8a 100%);
+                padding: 0.9rem 1rem;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.25);
+                border: none;
+                border-top: 3px solid #1a1a1a;
+                cursor: pointer;
+                color: white;
+                font-family: inherit;
+                width: 100%;
+                text-align: center;
+                overflow: hidden;
+            }
+            
+            .compare-top-5-sticky.show {
+                display: block;
+            }
+            
+            /* Metallic Shimmer Effect for Premium Button */
+            .shimmer-button {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .shimmer-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, 
+                    transparent 0%, 
+                    rgba(255, 255, 255, 0.1) 25%,
+                    rgba(255, 182, 255, 0.4) 40%,
+                    rgba(255, 255, 255, 0.8) 50%, 
+                    rgba(255, 182, 255, 0.4) 60%,
+                    rgba(255, 255, 255, 0.1) 75%,
+                    transparent 100%);
+                animation: shimmer 3s infinite;
+                pointer-events: none;
+            }
+            
+            .properties-list {
+                padding-bottom: 90px; /* Space for sticky button */
+            }
+            
+            /* CRITICAL FIX: Force Mobile Display - Ensure properties show */
+            .listings-panel {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+            
+            .properties-list {
+                display: block !important;
+                visibility: visible !important;
+                height: auto !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+            
+            .property-card {
+                display: block !important;
+                margin-bottom: 1.5rem !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+            }
+            
+            /* Ensure results summary is visible */
+            .results-summary {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            /* Ensure compare button is visible */
+            .shimmer-button {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+            
+            /* Loading Animations for Fast Performance */
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.8; }
+            }
+            
+            @keyframes bounce {
+                0%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+            }
+            
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        </style>
+</head>
+<body>
+
+
+        <div class="filter-bar">
+        <div class="filter-grid">
+            
+            <div class="filter-group">
+                <label class="filter-label">Property Type</label>
+                <select class="filter-select" id="propertyTypeSelect" onchange="switchPropertyType(this.value)">
+                    <option value="market-rate">Market Rate</option>
+                    <option value="tax-credit">Income Restricted</option>
+                </select>
+                <div class="property-type-info-small" id="propertyTypeInfo"></div>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Area (up to 5)</label>
+                <select class="filter-select" id="areaSelect" onchange="addAreaSelection()"><option value="">Choose area...</option></select>
+                <div class="selected-areas-display" id="selectedAreasDisplay"><span class="area-limit-note">Click map or select above</span></div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Bedrooms</label>
+                <select class="filter-select" id="bedroomsSelect" onchange="applyFilters()"><option value="">Any</option><option value="Studio">Studio</option><option value="1">1 BR</option><option value="2">2 BR</option><option value="3">3 BR</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">💰 Price Range</label>
+                <select class="filter-select" id="priceSelect" onchange="applyFilters()"><option value="">All Prices</option><option value="750-1000">$750 - $1,000</option><option value="1000-1250">$1,000 - $1,250</option><option value="1250-1500">$1,250 - $1,500</option><option value="1500-1750">$1,500 - $1,750</option><option value="1750-2000">$1,750 - $2,000</option><option value="2000-2500">$2,000 - $2,500</option><option value="2500-3000">$2,500 - $3,000</option><option value="3000-5000">$3,000 - $5,000</option><option value="5000-9999">$5,000 - $9,999</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Property Class</label>
+                <select class="filter-select" id="classSelect" onchange="applyFilters()">
+                    <option value="">All Classes</option>
+                    <option value="NEW">✨ Brand New (Last 3 years)</option>
+                    <option value="A">Class A (0-15 yrs)</option>
+                    <option value="B">Class B (15-30 yrs)</option>
+                    <option value="C">Class C (30+ yrs)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Renovated</label>
+                <select class="filter-select" id="renovatedSelect" onchange="applyFilters()">
+                    <option value="">All</option>
+                    <option value="yes">Renovated</option>
+                    <option value="no">Non Renovated</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="filter-grid-row-2">
+            <div class="filter-group">
+                <label class="filter-label">Rental History</label>
+                <select class="filter-select" id="rentalHistorySelect" onchange="checkQualificationIssues()"><option value="none">&#x2705; None (Clean)</option><option value="eviction">&#x26A0;&#xFE0F; Eviction</option><option value="debt">&#x26A0;&#xFE0F; Property Debt</option><option value="broken">&#x26A0;&#xFE0F; Broken Lease</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Credit History</label>
+                <select class="filter-select" id="creditSelect" onchange="checkQualificationIssues()"><option value="excellent">&#x2705; Excellent (700+)</option><option value="good">&#x2705; Good (650-699)</option><option value="fair">&#x2705; Fair (575-649)</option><option value="improving">&#x26A0;&#xFE0F; Improving (Below 575)</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Background</label>
+                <select class="filter-select" id="backgroundSelect" onchange="checkQualificationIssues()"><option value="perfect">&#x2705; Perfect</option><option value="misdemeanor">&#x26A0;&#xFE0F; Misdemeanor</option><option value="felony">&#x26A0;&#xFE0F; Felony</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Lease Term</label>
+                <select class="filter-select" id="leaseSelect" onchange="applyFilters()"><option value="">Any</option><option value="12-14">12-14 months</option><option value="15-18">15-18 months</option></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Sort By</label>
+                <select class="filter-select" id="sortSelect" onchange="applyFilters()"><option value="deals">&#x1F3C6; Best Deals</option><option value="discount">&#x1F4AF; Highest % Off</option><option value="price">&#x1F4B0; Lowest Price</option><option value="rating">&#x2B50; Highest Rated</option></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="listings-panel"><div class="properties-list" id="propertiesList"></div><div class="pricing-disclaimer" id="pricingDisclaimer"><strong>⚠️ Pricing Disclaimer:</strong> All pricing shown is <strong>estimated</strong> and for comparison purposes only. Actual rent varies by unit, floor plan, availability, move-in date, and lease terms. Discounts and specials apply only to qualifying units and bedroom types as specified by each property. Contact the property directly for exact, current pricing and availability. We are not responsible for pricing changes or discrepancies.</div></div>
+        <div class="map-panel">
+            <!-- Income Limits Banner (top of map, only shows when Income Restricted) -->
+            <div id="mapIncomeBanner" style="display: none; position: absolute; top: 12px; left: 12px; right: 12px; z-index: 500; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); border: 1px solid rgba(212,178,84,0.3); border-radius: 8px; padding: 0.6rem 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);">
+                <div style="text-align: center; line-height: 1.5;">
+                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--gold); margin-bottom: 0.35rem; letter-spacing: 0.3px;">Income Restricted Housing</div>
+                    <div style="font-size: 0.68rem; color: #4a4a4a; margin-bottom: 0.4rem; line-height: 1.4;">Income limits are based on household size. If your <strong style="color: #2d2d2d;">annual gross household income</strong> is under the amounts below, you may qualify for these apartment communities.</div>
+                    
+                    <!-- Line 1: 1, 2, 3 renters -->
+                    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: center; margin-bottom: 0.3rem;">
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">1</span> renter: <span style="font-weight: 600; color: #2d2d2d;">$57,800</span></span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">2</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$66,100</span></span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">3</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$74,400</span></span>
+                    </div>
+                    
+                    <!-- Line 2: 4, 5, 6 renters -->
+                    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: center;">
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">4</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$82,600</span></span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">5</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$89,300</span></span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">6</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$95,900</span></span>
+                    </div>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <div class="comparison-bar" id="comparisonBar">
+        <span><strong id="compareCount">0</strong> Properties Selected</span>
+        <button onclick="openComparisonModal()">Compare & Get Details</button>
+        <button class="btn-clear" onclick="clearComparison()">Clear</button>
+    </div>
+
+    <!-- Sticky Compare Button for Mobile -->
+    <button class="compare-top-5-sticky shimmer-button" id="stickyCompareBtn" onclick="compareTop5()">
+        <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">⚡ Get My Top 5 Matches</div>
+        <div style="font-size: 0.78rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
+    </button>
+
+    <button class="mobile-map-btn" id="mobileMapBtn" onclick="openMobileMap()">&#x1F4CD; Filter on Map</button>
+
+    <div class="mobile-map-overlay" id="mobileMapOverlay">
+        <div class="mobile-map-header"><h3>Select Areas (up to 5)</h3><button onclick="closeMobileMap()">Done &#x2713;</button></div>
+        <div id="mobileMap"></div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay"><div class="modal-content" id="modalContent"></div></div>
+
+    <div class="qualification-modal" id="qualificationModal">
+        <div class="qualification-content">
+            <div class="qualification-header"><h2>&#x26A0;&#xFE0F; Special Assistance Required</h2></div>
+            <div class="qualification-body">
+                <div class="warning-box" id="qualificationMessage"></div>
+                <div class="help-box"><h3>&#x2705; How We Can Help</h3><ul><li>Find properties that accept your situation</li><li>Avoid wasted application fees ($50-$100 each)</li><li>Expert guidance on approval strategies</li><li>Personal advocacy with property managers</li></ul></div>
+                <form onsubmit="handleQualificationSubmit(event)">
+                    <div class="form-group"><label>Full Name *</label><input type="text" required placeholder="John Doe"></div>
+                    <div class="form-group"><label>Email *</label><input type="email" required placeholder="john@example.com"></div>
+                    <div class="form-group"><label>Phone *</label><input type="tel" required placeholder="(512) 555-1234"></div>
+                    <div class="form-group"><label>Tell us about your situation</label><textarea placeholder="Any additional details..."></textarea></div>
+                    <button type="submit" class="btn-help">Get Expert Help Now</button>
+                    <button type="button" class="btn-cancel" style="width:100%;margin-top:0.4rem;" onclick="closeQualificationModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let map, mobileMap;
+        let polygons = {}, mobilePolygons = {};
+        let checkmarkMarkers = {}, mobileCheckmarkMarkers = {};
+        let propertyMarkers = [], mobilePropertyMarkers = [];
+        let selectedAreas = new Set();
+        const MAX_AREAS = 5;
+        const currentYear = new Date().getFullYear();
+        
+        // Default starting area
+        const DEFAULT_AREA = 'Downtown';
+
+        // ALL 23 area polygon coordinates from the completed map project
+        const areas = {
+            'Downtown': [[30.2858,-97.7639],[30.2755,-97.7703],[30.2710,-97.7693],[30.2656,-97.7567],[30.2607,-97.7432],[30.2517,-97.7388],[30.2509,-97.7363],[30.2511,-97.7363],[30.2599,-97.7327],[30.2598,-97.7327],[30.2593,-97.7315],[30.2646,-97.7291],[30.2686,-97.7280],[30.2682,-97.7267],[30.2723,-97.7276],[30.2721,-97.7326],[30.2747,-97.7316],[30.2801,-97.7505],[30.2803,-97.7539],[30.2824,-97.7565],[30.2835,-97.7602]],
+            'Central': [[30.2803,-97.7527],[30.2823,-97.7565],[30.2828,-97.7594],[30.2858,-97.7636],[30.2958,-97.7593],[30.3222,-97.7562],[30.3364,-97.7558],[30.3347,-97.7502],[30.3355,-97.7457],[30.3342,-97.7373],[30.3283,-97.7279],[30.3237,-97.7244],[30.3209,-97.7139],[30.3213,-97.7078],[30.3164,-97.7074],[30.3083,-97.7102],[30.3024,-97.7147],[30.2863,-97.7252],[30.2891,-97.7300],[30.2892,-97.7345],[30.2943,-97.7376],[30.2978,-97.7355],[30.3004,-97.7397],[30.3026,-97.7446],[30.2985,-97.7473],[30.2981,-97.7488],[30.2960,-97.7489],[30.2934,-97.7473],[30.2922,-97.7472],[30.2919,-97.7509],[30.2879,-97.7533],[30.2844,-97.7530],[30.2836,-97.7520],[30.2839,-97.7510],[30.2839,-97.7504],[30.2834,-97.7473],[30.2817,-97.7417],[30.2797,-97.7355],[30.2785,-97.7299],[30.2746,-97.7314],[30.2799,-97.7498],[30.2800,-97.7512]],
+            'Arboretum': [[30.3628,-97.7982],[30.3670,-97.8005],[30.3727,-97.7941],[30.3874,-97.7800],[30.4182,-97.7989],[30.4321,-97.7812],[30.4454,-97.7412],[30.4510,-97.7206],[30.4401,-97.6994],[30.4285,-97.7011],[30.4106,-97.7083],[30.4083,-97.7186],[30.3994,-97.7308],[30.3675,-97.7412],[30.3789,-97.7526],[30.3592,-97.7666],[30.3478,-97.7497],[30.3370,-97.7560],[30.3409,-97.7622],[30.3415,-97.7828],[30.3455,-97.7862],[30.3558,-97.7836],[30.3560,-97.7859],[30.3600,-97.7893],[30.3579,-97.7902],[30.3601,-97.7946],[30.3610,-97.7958]],
+            'West': [[30.3000,-97.8988],[30.2706,-97.9136],[30.2736,-97.9229],[30.2760,-97.9517],[30.2881,-97.9606],[30.2840,-97.9764],[30.2985,-98.0032],[30.3169,-98.0039],[30.3438,-98.0475],[30.3732,-98.0355],[30.3782,-98.0193],[30.3800,-97.9877],[30.3892,-97.9750],[30.4007,-97.9400],[30.4268,-97.9538],[30.4386,-97.9328],[30.4327,-97.9184],[30.4060,-97.9064],[30.4206,-97.9043],[30.4294,-97.8782],[30.4321,-97.8738],[30.4176,-97.8676],[30.4043,-97.8539],[30.3951,-97.8442],[30.3945,-97.8291],[30.3773,-97.7993],[30.3637,-97.7945],[30.3575,-97.7814],[30.3456,-97.7842],[30.3403,-97.7787],[30.3430,-97.7656],[30.3370,-97.7539],[30.2923,-97.7591],[30.2703,-97.7732],[30.2641,-97.7828],[30.2694,-97.7890],[30.2733,-97.7999],[30.2946,-97.8274],[30.2967,-97.8394],[30.3095,-97.8501],[30.3154,-97.8717]],
+            'Far West': [[30.3470,-97.7497],[30.3590,-97.7675],[30.3791,-97.7531],[30.3678,-97.7414]],
+            'East': [[30.2785,-97.7301],[30.3117,-97.7088],[30.3210,-97.7071],[30.3324,-97.7057],[30.3394,-97.7002],[30.3264,-97.6717],[30.3284,-97.6643],[30.3307,-97.6230],[30.3376,-97.5976],[30.3123,-97.6135],[30.3095,-97.6065],[30.3007,-97.6120],[30.3043,-97.6194],[30.3001,-97.6219],[30.2972,-97.6158],[30.2847,-97.6188],[30.2912,-97.6281],[30.2764,-97.6374],[30.2835,-97.6535],[30.2852,-97.6657],[30.2813,-97.6664],[30.2654,-97.6710],[30.2540,-97.6794],[30.2500,-97.6832],[30.2487,-97.6901],[30.2419,-97.6903],[30.2324,-97.6830],[30.2213,-97.6813],[30.2180,-97.6904],[30.2336,-97.7236],[30.2389,-97.7200],[30.2414,-97.7261],[30.2463,-97.7231],[30.2479,-97.7290],[30.2502,-97.7357],[30.2529,-97.7363],[30.2600,-97.7326],[30.2596,-97.7316],[30.2651,-97.7291],[30.2690,-97.7282],[30.2686,-97.7270],[30.2725,-97.7278],[30.2720,-97.7304]],
+            'Far East': [[30.2126,-97.6587],[30.2172,-97.6657],[30.2207,-97.6813],[30.2327,-97.6830],[30.2425,-97.6904],[30.2488,-97.6903],[30.2497,-97.6837],[30.2657,-97.6715],[30.2859,-97.6662],[30.2838,-97.6528],[30.2769,-97.6372],[30.2914,-97.6281],[30.2825,-97.6019],[30.3064,-97.5831],[30.3023,-97.5653],[30.2990,-97.5589],[30.2858,-97.5538],[30.2795,-97.5394],[30.2569,-97.5541],[30.2547,-97.5395],[30.2385,-97.5484],[30.2389,-97.5669],[30.2168,-97.5813],[30.2214,-97.5898],[30.2284,-97.5940],[30.2260,-97.6024],[30.2156,-97.6075],[30.2092,-97.6238],[30.2030,-97.6225],[30.1932,-97.6238],[30.1891,-97.6183],[30.2008,-97.6110],[30.1948,-97.5938],[30.1713,-97.6048],[30.1462,-97.6221],[30.1384,-97.6350],[30.1442,-97.6626],[30.1629,-97.6528],[30.1668,-97.6604],[30.1796,-97.6561]],
+            'North': [[30.3270,-97.7272],[30.3326,-97.7357],[30.3347,-97.7443],[30.3341,-97.7505],[30.3363,-97.7565],[30.3986,-97.7323],[30.4090,-97.7193],[30.4120,-97.7083],[30.4403,-97.6993],[30.4403,-97.6958],[30.4346,-97.6851],[30.4311,-97.6836],[30.4292,-97.6800],[30.4270,-97.6763],[30.4255,-97.6709],[30.4029,-97.6745],[30.3943,-97.6707],[30.3778,-97.6743],[30.3591,-97.6870],[30.3394,-97.6995],[30.3201,-97.7071],[30.3216,-97.7237]],
+            'Northeast': [[30.4250,-97.6712],[30.4173,-97.6558],[30.4080,-97.6446],[30.4015,-97.6340],[30.3926,-97.6269],[30.3858,-97.6140],[30.3788,-97.6120],[30.3751,-97.5964],[30.3689,-97.5830],[30.3475,-97.5946],[30.3394,-97.5919],[30.3304,-97.6218],[30.3277,-97.6652],[30.3253,-97.6729],[30.3389,-97.7002],[30.3779,-97.6745],[30.3935,-97.6727],[30.4022,-97.6750]],
+            'Northwest': [[30.4315,-97.8731],[30.4447,-97.8774],[30.4666,-97.8420],[30.4605,-97.8254],[30.4709,-97.7970],[30.4790,-97.7555],[30.4590,-97.7206],[30.4504,-97.7181],[30.4309,-97.7819],[30.4173,-97.7986],[30.3861,-97.7787],[30.3696,-97.7975],[30.3769,-97.8001],[30.3941,-97.8300],[30.3938,-97.8448],[30.4169,-97.8684],[30.4220,-97.8703]],
+            'South': [[30.1445,-97.9562],[30.2097,-97.9910],[30.2223,-97.9716],[30.2184,-97.9625],[30.2296,-97.9404],[30.2349,-97.9110],[30.2282,-97.8865],[30.2343,-97.8696],[30.2367,-97.8336],[30.2359,-97.8250],[30.2331,-97.8115],[30.2333,-97.7945],[30.2281,-97.7835],[30.2279,-97.7709],[30.2159,-97.7503],[30.0792,-97.8216],[30.1208,-97.9074]],
+            'South Central': [[30.2733,-97.7716],[30.2607,-97.7447],[30.2506,-97.7364],[30.2442,-97.7351],[30.2164,-97.7507],[30.2263,-97.7709],[30.2279,-97.7838],[30.2325,-97.7946],[30.2315,-97.8063],[30.2322,-97.8175],[30.2347,-97.8240],[30.2362,-97.8243],[30.2453,-97.8075],[30.2564,-97.8010],[30.2617,-97.7915],[30.2683,-97.7775]],
+            'Southeast': [[30.2505,-97.7351],[30.2466,-97.7232],[30.2425,-97.7258],[30.2395,-97.7191],[30.2336,-97.7229],[30.2204,-97.6827],[30.1996,-97.6827],[30.1787,-97.6884],[30.1677,-97.6456],[30.1359,-97.6666],[30.1180,-97.6580],[30.0991,-97.6709],[30.0829,-97.6877],[30.0805,-97.6987],[30.0801,-97.7282],[30.0924,-97.7601],[30.1137,-97.8084],[30.1677,-97.7854],[30.2266,-97.7459]],
+            'Southwest': [[30.3034,-97.9102],[30.2826,-97.8951],[30.2912,-97.8882],[30.2880,-97.8799],[30.2955,-97.8813],[30.2964,-97.8763],[30.2961,-97.8714],[30.3188,-97.8631],[30.3118,-97.8497],[30.3107,-97.8448],[30.3024,-97.8396],[30.2972,-97.8295],[30.2706,-97.7909],[30.2721,-97.7869],[30.2654,-97.7854],[30.2560,-97.8005],[30.2433,-97.8070],[30.2356,-97.8269],[30.2331,-97.8684],[30.2287,-97.8848],[30.2339,-97.9088],[30.2303,-97.9357],[30.2193,-97.9608],[30.2345,-97.9505],[30.2425,-97.9448],[30.2451,-97.9368],[30.2579,-97.9472],[30.2773,-97.9469],[30.2732,-97.9270],[30.2605,-97.9083],[30.3000,-97.9299]],
+            'Wells Branch': [[30.4777,-97.7073],[30.4796,-97.6851],[30.4808,-97.6731],[30.4540,-97.6652],[30.4238,-97.6713],[30.4280,-97.6816],[30.4304,-97.6825],[30.4306,-97.6847],[30.4342,-97.6867],[30.4391,-97.6956],[30.4401,-97.6987],[30.4457,-97.7142],[30.4483,-97.7187],[30.4488,-97.7263],[30.4522,-97.7268]],
+            'Round Rock': [[30.5955,-97.6151],[30.6020,-97.5974],[30.5917,-97.5916],[30.5824,-97.5857],[30.5457,-97.5740],[30.5061,-97.5746],[30.4734,-97.5924],[30.4883,-97.6297],[30.4702,-97.6370],[30.4625,-97.6423],[30.4642,-97.6624],[30.4601,-97.6669],[30.4807,-97.6733],[30.4771,-97.7189],[30.4814,-97.7451],[30.4840,-97.7452],[30.4871,-97.7485],[30.4956,-97.7527],[30.4997,-97.7503],[30.5102,-97.7558],[30.5423,-97.7660],[30.5447,-97.7596],[30.5697,-97.7783],[30.5844,-97.7719],[30.5895,-97.7543],[30.5898,-97.7448],[30.5779,-97.7438],[30.5834,-97.7169],[30.5791,-97.7090],[30.5785,-97.6987],[30.5787,-97.6921],[30.5729,-97.6921],[30.5749,-97.6829],[30.5809,-97.6681],[30.5843,-97.6580],[30.5879,-97.6452],[30.5915,-97.6473],[30.5952,-97.6360],[30.5909,-97.6350],[30.5942,-97.6245],[30.5949,-97.6199]],
+            'Pflugerville': [[30.3952,-97.6328],[30.4018,-97.6374],[30.4089,-97.6491],[30.4198,-97.6621],[30.4235,-97.6712],[30.4552,-97.6666],[30.4615,-97.6686],[30.4679,-97.6554],[30.4684,-97.6453],[30.4907,-97.6297],[30.4747,-97.5929],[30.4864,-97.5862],[30.5019,-97.5812],[30.4991,-97.5493],[30.4920,-97.5149],[30.4786,-97.5163],[30.4598,-97.5236],[30.4379,-97.5407],[30.4337,-97.5323],[30.4327,-97.5286],[30.4253,-97.5325],[30.3979,-97.5464],[30.4072,-97.5648],[30.4126,-97.5751],[30.4055,-97.5768],[30.3998,-97.5790],[30.3898,-97.5787],[30.3852,-97.5775],[30.3816,-97.5787],[30.3687,-97.5838],[30.3761,-97.6013],[30.3772,-97.6080],[30.3792,-97.6123],[30.3837,-97.6149]],
+            'Cedar Park': [[30.5149,-97.8525],[30.5454,-97.8655],[30.5473,-97.8590],[30.5558,-97.8535],[30.5645,-97.8257],[30.5555,-97.8199],[30.5382,-97.8168],[30.5357,-97.8149],[30.5365,-97.8092],[30.5371,-97.8046],[30.5410,-97.7986],[30.5427,-97.7914],[30.5470,-97.7768],[30.5510,-97.7617],[30.5453,-97.7582],[30.5426,-97.7644],[30.5305,-97.7582],[30.5278,-97.7488],[30.5189,-97.7440],[30.5062,-97.7462],[30.5027,-97.7510],[30.4994,-97.7491],[30.4951,-97.7517],[30.4857,-97.7455],[30.4818,-97.7435],[30.4805,-97.7502],[30.4763,-97.7651],[30.4747,-97.7763],[30.4685,-97.7967],[30.4599,-97.8195],[30.4541,-97.8267],[30.4558,-97.8346],[30.4584,-97.8405],[30.4623,-97.8448],[30.4676,-97.8458],[30.4719,-97.8513],[30.4783,-97.8554],[30.4830,-97.8540],[30.4861,-97.8583],[30.4892,-97.8612],[30.4966,-97.8599],[30.5080,-97.8585],[30.5117,-97.8616]],
+            'Leander & Liberty Hill': [[30.7395,-98.0362],[30.7483,-97.9706],[30.7470,-97.8811],[30.7148,-97.8835],[30.7144,-97.8604],[30.7076,-97.8590],[30.7046,-97.8223],[30.6491,-97.8006],[30.6491,-97.8302],[30.6149,-97.8195],[30.6190,-97.7790],[30.5803,-97.7642],[30.5717,-97.7708],[30.5493,-97.7601],[30.5324,-97.8147],[30.5629,-97.8260],[30.5522,-97.8539],[30.5430,-97.8604],[30.5342,-97.8846],[30.5222,-97.9294],[30.5280,-97.9610],[30.5433,-97.9534],[30.5580,-97.9951]],
+            'Georgetown': [[30.6057,-97.5905],[30.6134,-97.5861],[30.5781,-97.5390],[30.5821,-97.5260],[30.5914,-97.5093],[30.6028,-97.4702],[30.6282,-97.4427],[30.6816,-97.4692],[30.7302,-97.4836],[30.7120,-97.5715],[30.7542,-97.5881],[30.7380,-97.6389],[30.7383,-97.6612],[30.7660,-97.6650],[30.7755,-97.6870],[30.7477,-97.7639],[30.7483,-97.8017],[30.7306,-97.8463],[30.7088,-97.8587],[30.7041,-97.8230],[30.6485,-97.8065],[30.6485,-97.8305],[30.6113,-97.8223],[30.6119,-97.7818],[30.5865,-97.7680],[30.5859,-97.7488],[30.5759,-97.7450],[30.5812,-97.7179],[30.5797,-97.7086],[30.5776,-97.6939],[30.5711,-97.6921],[30.5821,-97.6571],[30.5900,-97.6376],[30.5930,-97.6094],[30.5977,-97.5946]],
+            'Hutto': [[30.6205,-97.6073],[30.6335,-97.5919],[30.6347,-97.5634],[30.6364,-97.5418],[30.6246,-97.5057],[30.6226,-97.4515],[30.5670,-97.4371],[30.4694,-97.4391],[30.4718,-97.4659],[30.4709,-97.4875],[30.4796,-97.5157],[30.4914,-97.5172],[30.4960,-97.5834],[30.5095,-97.5762],[30.5397,-97.5778],[30.5785,-97.5850]],
+            'Manor': [[30.4194,-97.5768],[30.4105,-97.5586],[30.4836,-97.5150],[30.4519,-97.4089],[30.3065,-97.5001],[30.2745,-97.5383],[30.3041,-97.5888],[30.3145,-97.6321],[30.3290,-97.6276],[30.3415,-97.5946],[30.3785,-97.5950]],
+            'Buda & Kyle': [[30.1570,-97.9634],[30.0822,-97.8230],[30.1199,-97.8068],[30.0899,-97.7388],[30.0837,-97.6877],[30.0626,-97.6894],[29.9692,-97.6726],[29.9549,-97.7488],[29.9154,-97.7862],[29.9085,-97.9211],[29.9383,-97.9246],[30.0584,-97.9417],[30.0762,-97.9411],[30.1172,-97.9459],[30.1327,-97.9644]],
+            'Dripping Springs': [[30.2431,-98.0873],[30.2422,-98.0739],[30.2347,-98.0585],[30.2321,-98.0286],[30.1974,-98.0138],[30.1965,-98.0066],[30.2033,-97.986],[30.1564,-97.9771],[30.1353,-98.0355],[30.1368,-98.0866],[30.1166,-98.0842],[30.1187,-98.1378],[30.1383,-98.1374],[30.1359,-98.247],[30.195,-98.247],[30.2365,-98.2174]]
+        };
+
+        // Area descriptions for dropdown (landmarks) and map tooltips (bullets)
+        const areaDescriptions = {
+            'Downtown': {
+                landmarks: 'Rainey • 2nd Street • Lady Bird Lake',
+                bullets: [
+                    'High-rise living',
+                    'Close to offices, nightlife, dining, and the lake',
+                    'Highly walkable',
+                    'Central location'
+                ]
+            },
+            'Central': {
+                landmarks: 'UT • Hyde Park • North Loop',
+                bullets: [
+                    'Classic central neighborhoods near UT',
+                    'Tree-lined streets',
+                    'Vintage apartment communities',
+                    'Quick access to downtown'
+                ]
+            },
+            'Arboretum': {
+                landmarks: 'Domain • Tech Corridor',
+                bullets: [
+                    'North Austin shopping and tech hub',
+                    'Near The Domain and major employers',
+                    'Newer apartment communities',
+                    'Easy access to Mopac & Hwy 183'
+                ]
+            },
+            'Far West': {
+                landmarks: 'Northwest Hills • Far West Blvd',
+                bullets: [
+                    'Hillside residential area',
+                    'Established condos and apartment communities',
+                    'Quieter atmosphere',
+                    'Convenient to Mopac & 360'
+                ]
+            },
+            'West': {
+                landmarks: 'Westlake • Lake Austin • 360 Corridor',
+                bullets: [
+                    'Scenic Hill Country surroundings',
+                    'Upscale and luxury communities',
+                    'Near top-rated schools',
+                    'Suburban feel near DT Austin'
+                ]
+            },
+            'East': {
+                landmarks: 'East 6th • MLK • Springdale',
+                bullets: [
+                    'Trendy, artsy neighborhoods',
+                    'Mix of new builds and established props',
+                    'Near breweries, food trucks, and nightlife',
+                    'Strong creative vibe'
+                ]
+            },
+            'Far East': {
+                landmarks: 'Tesla • Airport • Del Valle',
+                bullets: [
+                    'Developing east Austin growth area',
+                    'Close to Tesla Giga Texas and ABIA',
+                    'Newer, more affordable communities',
+                    'Larger average floor plans'
+                ]
+            },
+            'South': {
+                landmarks: 'SoCo • SoLa • St. Elmo',
+                bullets: [
+                    'Walkable entertainment districts',
+                    'Popular dining and shopping',
+                    'Blend of urban and residential living',
+                    'Expands into suburban living farther south'
+                ]
+            },
+            'North': {
+                landmarks: 'Parmer • Tech Ridge • Walnut Creek',
+                bullets: [
+                    'Affordable North Austin communities',
+                    'Near tech campuses and employers',
+                    'Quieter neighborhoods',
+                    'Parks and trail access nearby'
+                ]
+            },
+            'Northeast': {
+                landmarks: 'Harris Branch • Samsung • Pflugerville edge',
+                bullets: [
+                    'Fast-growing residential area',
+                    'New construction communities',
+                    'Strong commute access',
+                    'Popular with families'
+                ]
+            },
+            'Northwest': {
+                landmarks: 'Anderson Mill • Lakeline • Cedar Park edge',
+                bullets: [
+                    'Suburban living',
+                    'Good school districts',
+                    'Newer apartment developments',
+                    'Close to retail hubs and major highways'
+                ]
+            },
+            'Round Rock': {
+                landmarks: 'Dell • Old Town • 45 Toll',
+                bullets: [
+                    'Family-friendly suburb',
+                    'Strong schools',
+                    'Newer communities',
+                    'Easy access to major tech employers'
+                ]
+            },
+            'Pflugerville': {
+                landmarks: 'Lake Pflugerville • SH-130',
+                bullets: [
+                    'Growing suburban area',
+                    'Larger apartment layouts',
+                    'Good pricing compared to central Austin',
+                    'Convenient highway access'
+                ]
+            },
+            'Cedar Park': {
+                landmarks: 'Lakeline Mall • Brushy Creek',
+                bullets: [
+                    'Established northern suburb',
+                    'Parks and trails',
+                    'Strong school zones',
+                    'Modern apartment communities'
+                ]
+            },
+            'Georgetown': {
+                landmarks: 'Historic Square • Wolf Ranch',
+                bullets: [
+                    'Charming suburban feel',
+                    'Historic town square area',
+                    'New apartment developments',
+                    'Quieter lifestyle'
+                ]
+            },
+            'Leander & Liberty Hill': {
+                landmarks: 'North Line • New Growth Areas',
+                bullets: [
+                    'Rapid residential expansion',
+                    'Brand-new apartment developments',
+                    'Best pricing for new construction',
+                    'Longer commute times'
+                ]
+            },
+            'Manor': {
+                landmarks: 'SH-290 Corridor',
+                bullets: [
+                    'Affordable east Austin suburb',
+                    'Close to Tesla corridor',
+                    'Ongoing development growth',
+                    'Easy highway access'
+                ]
+            },
+            'Buda & Kyle': {
+                landmarks: 'South IH-35 Corridor',
+                bullets: [
+                    'Affordable southern suburbs',
+                    'Newer apartment communities',
+                    'Easy IH-35 commuting',
+                    'Small-town feel'
+                ]
+            },
+            'Dripping Springs': {
+                landmarks: 'Hill Country Gateway',
+                bullets: [
+                    'Scenic Hill Country living',
+                    'Luxury rental options',
+                    'Small-town atmosphere',
+                    'Natural beauty surroundings'
+                ]
+            },
+            'South Central': {
+                landmarks: 'South of Downtown',
+                bullets: [
+                    'South of downtown core',
+                    'Mix of older and newer communities',
+                    'Convenient central location',
+                    'Growing neighborhood'
+                ]
+            },
+            'Southeast': {
+                landmarks: 'SE Riverside • Airport • McKinney Falls',
+                bullets: [
+                    'More affordable than central and west areas',
+                    'Mix of older and newer communities',
+                    'Quick access to downtown and ABIA',
+                    'Growing dining and retail options'
+                ]
+            },
+            'Southwest': {
+                landmarks: 'Oak Hill • SW Parkway',
+                bullets: [
+                    'Suburban feel with quick city access',
+                    'Newer master-planned communities',
+                    'Good school zones and parks',
+                    'Popular with families and long-term renters'
+                ]
+            },
+            'Wells Branch': {
+                landmarks: 'North Austin',
+                bullets: [
+                    'Established North Austin community',
+                    'Good value pricing',
+                    'Easy access to major employers',
+                    'Convenient location'
+                ]
+            },
+            'Hutto': {
+                landmarks: 'Far Northeast',
+                bullets: [
+                    'Far northeast suburb',
+                    'Newest developments',
+                    'Excellent pricing',
+                    'Family-friendly communities'
+                ]
+            }
+        };
+
+        // Pricing increments based on Austin market research (within same community)
+        // Studio â†’ 1BR: ~$200 avg | 1BR â†’ 2BR: ~$300 avg | 2BR â†’ 3BR: ~$400 avg
+        const BEDROOM_INCREMENTS = {
+            'studio_to_1br': 200,
+            '1br_to_2br': 300,
+            '2br_to_3br': 400
+        };
+
+        // Sample property data with rent ranges (minRent = lowest bedroom, maxRent = highest bedroom)
+        // bedroomTypes: array of available bedroom types for this property (0=Studio, 1=1BR, etc)
+        // discounts: per-bedroom discount info (some specials only apply to certain unit types)
+        
+        // Property Type Configuration
+        let currentPropertyType = 'market-rate'; // 'market-rate' or 'tax-credit'
+        
+        // ============================================================================
+        // GOOGLE APPS SCRIPT INTEGRATION - WORKING PRODUCTION URL
+        // ============================================================================
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGqkNmGMF1WdApBZaR_x73_Ce9BEf8df6fYZnfY-YCcVw-su_ygLD2ShILBq_rHrqc/exec';
+        
+        // Formspree endpoint for lead capture
+        const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xldqlapj';
+        
+        // Google Sheets data loaded from Apps Script
+        
+        // Properties array - will be populated from Google Sheets
+        let properties = [];
+        
+        // ============================================================================
+        // LOAD PROPERTIES FROM GOOGLE SHEETS
+        // ============================================================================
+        // Generate unique 4-letter property codes
+        const usedCodes = new Set();
+        function generatePropertyCode(propertyName) {
+            // Use first letters of property name if available, otherwise random
+            const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; // Excluding I and O to avoid confusion
+            let code = '';
+            
+            // Try to use first letters of property name
+            if (propertyName) {
+                const words = propertyName.split(' ');
+                code = words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
+                // Pad with random letters if needed
+                while (code.length < 4) {
+                    code += letters[Math.floor(Math.random() * letters.length)];
+                }
+            } else {
+                // Generate completely random code
+                for (let i = 0; i < 4; i++) {
+                    code += letters[Math.floor(Math.random() * letters.length)];
+                }
+            }
+            
+            // Ensure uniqueness
+            let attempts = 0;
+            while (usedCodes.has(code) && attempts < 100) {
+                // Add random letter if code exists
+                code = code.slice(0, 3) + letters[Math.floor(Math.random() * letters.length)];
+                attempts++;
+            }
+            
+            usedCodes.add(code);
+            return code;
+        }
+
+        
+        // ============================================================================
+        // FAST LOADING FUNCTIONS - Caching & Progress UI
+        // ============================================================================
+        
+        function showLoadingProgress() {
+            const container = document.getElementById('properties-list');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 3rem 1rem; max-width: 500px; margin: 0 auto;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; animation: pulse 2s infinite;">
+                        🏢
+                    </div>
+                    <h2 style="color: var(--teal); margin-bottom: 0.5rem; font-size: 1.5rem;">
+                        Loading Austin Apartments
+                    </h2>
+                    <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                        Fetching <strong>700+ properties</strong> from <strong>24 areas</strong>...<br>
+                        <span style="font-size: 0.85rem;">⏳ This takes 5-10 seconds on first visit</span><br>
+                        <span style="font-size: 0.85rem;">💾 Future visits will be instant!</span>
+                    </p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem;">
+                        <div style="width: 12px; height: 12px; background: var(--teal); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out;"></div>
+                        <div style="width: 12px; height: 12px; background: var(--pink); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out 0.2s;"></div>
+                        <div style="width: 12px; height: 12px; background: var(--gold); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out 0.4s;"></div>
+                    </div>
+                    
+                    <p style="color: #9ca3af; font-size: 0.75rem; margin-top: 2rem;">
+                        💡 Pro tip: Select an area on the map while loading!
+                    </p>
+                </div>
+            `;
+        }
+        
+        function showCacheNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--teal);
+                color: white;
+                padding: 0.75rem 1.25rem;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = `⚡ ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+        
+        async function refreshCacheInBackground() {
+            try {
+                console.log('🔄 Refreshing cache in background...');
+                const response = await fetch(APPS_SCRIPT_URL);
+                const data = await response.json();
+                
+                if (data.success && data.properties) {
+                    localStorage.setItem('austinPropertiesCache', JSON.stringify(data));
+                    localStorage.setItem('austinPropertiesCacheTime', Date.now().toString());
+                    console.log('✅ Cache refreshed in background');
+                }
+            } catch (error) {
+                console.log('⚠️ Background refresh failed (not critical):', error);
+            }
+        }
+
+        async function loadPropertiesFromGoogleSheets() {
+            try {
+                console.log('🔄 Loading properties from Google Sheets...');
+                
+                // ============================================================================
+                // FAST LOADING: Check localStorage cache first (2-hour cache)
+                // ============================================================================
+                const cached = localStorage.getItem('austinPropertiesCache');
+                const cacheTimestamp = localStorage.getItem('austinPropertiesCacheTime');
+                const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+                const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours
+                
+                let data;
+                
+                if (cached && cacheAge < CACHE_DURATION) {
+                    // Cache is fresh - use it for INSTANT loading
+                    console.log('✅ Loading from cache (instant! - cached ' + Math.round(cacheAge/1000/60) + ' min ago)');
+                    data = JSON.parse(cached);
+                    
+                    // Show notification that cache was used
+                    showCacheNotification('Loaded instantly from cache!');
+                    
+                    // Refresh cache in background for next time
+                    setTimeout(() => refreshCacheInBackground(), 1000);
+                } else {
+                    // No cache or stale - fetch from API
+                    console.log('🌐 Fetching from API (first visit or cache expired)...');
+                    const response = await fetch(APPS_SCRIPT_URL);
+                    data = await response.json();
+                    
+                    // Save fresh data to cache
+                    if (data.success && data.properties) {
+                        localStorage.setItem('austinPropertiesCache', JSON.stringify(data));
+                        localStorage.setItem('austinPropertiesCacheTime', Date.now().toString());
+                        console.log('💾 Saved to cache for next visit');
+                    }
+                }
+                
+                if (data.success && data.properties) {
+                    // Transform Google Sheets data to match your app's format
+                    properties = data.properties.map(prop => {
+                        // Parse bedrooms: "1 - 2" → [1, 2]
+                        const bedMatch = prop.bedrooms.match(/(\d+)\s*-\s*(\d+)/);
+                        const minBed = bedMatch ? parseInt(bedMatch[1]) : 1;
+                        const maxBed = bedMatch ? parseInt(bedMatch[2]) : 1;
+                        const bedroomTypes = [];
+                        for (let i = minBed; i <= maxBed; i++) bedroomTypes.push(i);
+                        
+                        // ============================================================
+                        // LEASE TERM DETERMINATION
+                        // Priority: Column K (manual override) > Parsed from specials
+                        // ============================================================
+                        let leaseTermMonths = 12; // Default
+                        
+                        // Check Column K first (manual override)
+                        if (prop.leaseTermOverride && prop.leaseTermOverride > 0) {
+                            leaseTermMonths = prop.leaseTermOverride;
+                            console.log(`✅ ${prop.name}: Using Column K lease term override: ${leaseTermMonths} months`);
+                        } else {
+                            // Parse from specials text (original behavior)
+                            const leaseMatch = prop.specials.match(/(\d+)\s*mo\s*lease/i);
+                            if (leaseMatch) {
+                                leaseTermMonths = parseInt(leaseMatch[1]);
+                                console.log(`📋 ${prop.name}: Parsed lease term from specials: ${leaseTermMonths} months`);
+                            } else {
+                                console.log(`⚠️ ${prop.name}: No lease term found, using default: ${leaseTermMonths} months`);
+                            }
+                        }
+                        
+                        // ============================================================
+                        // COMPREHENSIVE SPECIALS PARSING - FIXED
+                        // ============================================================
+                        
+                        const specialsLower = prop.specials.toLowerCase();
+                        
+                        // Determine which bedroom types get the discount
+                        let applicableBedroomTypes = [...bedroomTypes]; // Default: all
+                        
+                        if (specialsLower.match(/\b1\s*br\s*only\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 1);
+                        } else if (specialsLower.match(/\b2\s*br\s*only\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 2);
+                        } else if (specialsLower.match(/\b3\s*br\s*only\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 3);
+                        } else if (specialsLower.match(/\b(?:studio|0\s*br)\s*only\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 0);
+                        } else if (specialsLower.match(/\b1\s*br\s*(?:&|and)\s*2\s*br\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 1 || b === 2);
+                        } else if (specialsLower.match(/\b2\s*br\s*(?:&|and)\s*3\s*br\b/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b === 2 || b === 3);
+                        } else if (specialsLower.match(/\b2\s*br\s*\+/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b >= 2);
+                        } else if (specialsLower.match(/\b1\s*br\s*\+/)) {
+                            applicableBedroomTypes = bedroomTypes.filter(b => b >= 1);
+                        }
+                        
+                        // Parse discount amounts - COLLECT ALL, USE MAXIMUM
+                        let monthsFreeValues = []; // Collect all free month values
+                        let giftCard = 0;
+                        
+                        // CRITICAL FIX: "100% off rent for X months" format
+                        const percentOffMatch = prop.specials.match(/100%\s*off\s*rent\s*for\s*(\d+\.?\d*)\s*month/i);
+                        if (percentOffMatch) {
+                            monthsFreeValues.push(parseFloat(percentOffMatch[1]));
+                        }
+                        
+                        // Standard "X months free" (check ALL occurrences)
+                        const monthsMatches = prop.specials.matchAll(/(\d+\.?\d*)\s*month[s]?\s+free/gi);
+                        for (const match of monthsMatches) {
+                            monthsFreeValues.push(parseFloat(match[1]));
+                        }
+                        
+                        // "First X months free"
+                        const firstMatch = prop.specials.match(/(?:first|1st)\s*(\d+\.?\d*)\s*month[s]?\s+free/i);
+                        if (firstMatch) {
+                            monthsFreeValues.push(parseFloat(firstMatch[1]));
+                        }
+                        
+                        // Weeks format - convert to months (check ALL occurrences)
+                        const weeksMatches = prop.specials.matchAll(/(\d+\.?\d*)\s*week[s]?\s+free/gi);
+                        for (const match of weeksMatches) {
+                            const weeks = parseFloat(match[1]);
+                            monthsFreeValues.push(weeks / 4); // Convert weeks to months
+                        }
+                        
+                        // Use the MAXIMUM value found (best deal for customer)
+                        let monthsFree = monthsFreeValues.length > 0 ? Math.max(...monthsFreeValues) : 0;
+                        
+                        // Log if multiple values found (data quality check)
+                        if (monthsFreeValues.length > 1) {
+                            console.warn(`⚠️ ${prop.name}: Multiple free rent values found [${monthsFreeValues.join(', ')}], using maximum: ${monthsFree}`);
+                        }
+                        
+                        // Gift card / credit
+                        const giftMatch = prop.specials.match(/\$([0-9,]+)\s*(?:gift\s*card|credit|off)/i);
+                        if (giftMatch) {
+                            giftCard = parseFloat(giftMatch[1].replace(/,/g, ''));
+                        }
+                        
+                        // Validation: Cap at reasonable limits
+                        if (monthsFree > 6) {
+                            console.warn(`⚠️ ${prop.name}: Capping ${monthsFree} months free to 6 months`);
+                            monthsFree = 6;
+                        }
+                        if (giftCard > 5000) {
+                            console.warn(`⚠️ ${prop.name}: Capping $${giftCard} gift card to $5000`);
+                            giftCard = 5000;
+                        }
+                        
+                        // Create discounts - apply only to applicable bedroom types
+                        const discounts = {};
+                        bedroomTypes.forEach(bed => {
+                            if (applicableBedroomTypes.includes(bed)) {
+                                discounts[bed] = { months: monthsFree, giftCard: giftCard };
+                            } else {
+                                discounts[bed] = { months: 0, giftCard: 0 };
+                            }
+                        });
+                        
+                        return {
+                            name: prop.name,
+                            propertyCode: prop.propertyId || generatePropertyCode(prop.name), // Use Column L Property ID or fallback to generated
+                            location: `${prop.area} - ${prop.address}`,
+                            area: prop.area,
+                            bedroomTypes: bedroomTypes,
+                            minRent: prop.minRent,
+                            maxRent: prop.maxRent,
+                            rating: parseFloat(prop.rating) || 0,
+                            specials: prop.specials,
+                            leaseTermMonths: leaseTermMonths,
+                            yearBuilt: parseInt(prop.built) || null,
+                            yearRenovated: prop.renovated ? parseInt(prop.renovated) : null,
+                            isRenovated: !!prop.renovated,
+                            coords: [30.2672, -97.7431],
+                            discounts: discounts,
+                            phone: prop.phone,
+                            class: prop.class,
+                            address: prop.address,
+                            googleRating: prop.googleRating || 0, // Add Google rating from Column J
+                            propertyId: prop.propertyId || generatePropertyCode(prop.name) // Store original ID
+                        };
+                    });
+                    
+                    console.log(`📊 Loaded ${properties.length} properties from Google Sheets`);
+                    
+                    // ============================================================
+                    // DATA VALIDATION - Filter out invalid properties
+                    // Note: Properties with minRent = -1 are "Call for pricing" and are allowed
+                    // ============================================================
+                    const beforeValidation = properties.length;
+                    properties = properties.filter(prop => {
+                        // Allow "Call for pricing" properties (minRent = -1)
+                        const isCallForPricing = prop.minRent === -1;
+                        
+                        if (!isCallForPricing) {
+                            // Check for valid rent (must have minRent > 0)
+                            if (!prop.minRent || prop.minRent <= 0) {
+                                console.warn(`⚠️ Excluding ${prop.name}: Invalid rent ($${prop.minRent})`);
+                                return false;
+                            }
+                            
+                            // Check for valid maxRent
+                            if (!prop.maxRent || prop.maxRent <= 0) {
+                                console.warn(`⚠️ Excluding ${prop.name}: Invalid max rent ($${prop.maxRent})`);
+                                return false;
+                            }
+                            
+                            // Check that minRent <= maxRent
+                            if (prop.minRent > prop.maxRent) {
+                                console.warn(`⚠️ Excluding ${prop.name}: Min rent > Max rent ($${prop.minRent} > $${prop.maxRent})`);
+                                return false;
+                            }
+                        }
+                        
+                        // Check for valid area
+                        if (!prop.area || prop.area.trim() === '') {
+                            console.warn(`⚠️ Excluding ${prop.name}: Missing area`);
+                            return false;
+                        }
+                        
+                        // Check for valid name
+                        if (!prop.name || prop.name.trim() === '') {
+                            console.warn(`⚠️ Excluding property: Missing name`);
+                            return false;
+                        }
+                        
+                        return true;
+                    });
+                    
+                    const afterValidation = properties.length;
+                    if (beforeValidation !== afterValidation) {
+                        console.warn(`⚠️ Filtered out ${beforeValidation - afterValidation} invalid properties`);
+                    }
+                    console.log(`✅ ${properties.length} valid properties loaded`);
+                    
+                    // Calculate property classes
+                    properties.forEach(p => p.calculatedClass = getPropertyClass(p));
+                    
+                    // Initialize default view
+                    initializeDefaults();
+                    
+                } else {
+                    console.error('❌ Error loading properties:', data.error);
+                    console.warn('⚠️ Using sample properties as fallback');
+                    properties = sampleProperties;
+                    properties.forEach(p => p.calculatedClass = getPropertyClass(p));
+                    initializeDefaults();
+                }
+            } catch (error) {
+                console.error('❌ Fetch error:', error);
+                console.warn('⚠️ CORS error detected - likely opening file locally (file://)');
+                console.warn('⚠️ Using sample properties as fallback');
+                console.warn('💡 To load real data: Use a local server or deploy to GitHub Pages');
+                
+                // Use sample properties as fallback
+                properties = sampleProperties;
+                properties.forEach(p => p.calculatedClass = getPropertyClass(p));
+                initializeDefaults();
+            }
+        }
+        
+        // Fallback sample properties (only used if Google Sheets fails to load)
+        const sampleProperties = [
+            // Downtown Austin (multiple for default view)
+            { name: "The Quincy", location: "Downtown Austin - Rainey St", area: "Downtown", bedroomTypes: [1, 2], minRent: 1800, maxRent: 2100, rating: 4.8, specials: "2 months free + $500 gift card on 1BR & 2BR", leaseTermMonths: 12, yearBuilt: 2022, yearRenovated: null, isRenovated: false, coords: [30.2620, -97.7400],
+              discounts: { 1: { months: 2, giftCard: 500 }, 2: { months: 2, giftCard: 500 } } },
+            { name: "Skyloft Austin", location: "Downtown Austin - 2nd St", area: "Downtown", bedroomTypes: [0, 1, 2], minRent: 1650, maxRent: 2200, rating: 4.9, specials: "10 weeks free on 1BR & 2BR only", leaseTermMonths: 14, yearBuilt: 2023, yearRenovated: null, isRenovated: false, coords: [30.2670, -97.7480],
+              discounts: { 0: { months: 0, giftCard: 0 }, 1: { months: 2.5, giftCard: 0 }, 2: { months: 2.5, giftCard: 0 } } },
+            { name: "Austin City Lofts", location: "Downtown Austin - Congress", area: "Downtown", bedroomTypes: [1, 2, 3], minRent: 2000, maxRent: 2800, rating: 4.7, specials: "6 weeks free + $1000 gift card on 2BR+", leaseTermMonths: 12, yearBuilt: 2021, yearRenovated: null, isRenovated: false, coords: [30.2710, -97.7430],
+              discounts: { 1: { months: 0.5, giftCard: 0 }, 2: { months: 1.5, giftCard: 1000 }, 3: { months: 1.5, giftCard: 1000 } } },
+            { name: "The W Residences", location: "Downtown Austin - West 6th", area: "Downtown", bedroomTypes: [1, 2], minRent: 1750, maxRent: 2050, rating: 4.6, specials: "First 2 months free on all units", leaseTermMonths: 12, yearBuilt: 2020, yearRenovated: null, isRenovated: false, coords: [30.2740, -97.7520],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 } } },
+            // Core Austin Areas
+            { name: "Plaza Saltillo", location: "East Austin", area: "East", bedroomTypes: [0, 1, 2], minRent: 1350, maxRent: 1850, rating: 4.7, specials: "6 weeks free on 1BR & 2BR", leaseTermMonths: 13, yearBuilt: 2021, yearRenovated: null, isRenovated: false, coords: [30.2650, -97.7050],
+              discounts: { 0: { months: 0, giftCard: 0 }, 1: { months: 1.5, giftCard: 0 }, 2: { months: 1.5, giftCard: 0 } } },
+            { name: "Camden Rainey Street", location: "South Austin", area: "South", bedroomTypes: [1, 2, 3], minRent: 1500, maxRent: 2200, rating: 4.6, specials: "First 2 months free on all units", leaseTermMonths: 12, yearBuilt: 2019, yearRenovated: null, isRenovated: false, coords: [30.1800, -97.8100],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 }, 3: { months: 2, giftCard: 0 } } },
+            { name: "Post Domain", location: "The Domain", area: "Arboretum", bedroomTypes: [1, 2], minRent: 2200, maxRent: 2500, rating: 4.9, specials: "8 weeks free on all units", leaseTermMonths: 12, yearBuilt: 2023, yearRenovated: null, isRenovated: false, coords: [30.4000, -97.7250],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 } } },
+            { name: "AMLI South Shore", location: "Central Austin - Classic", area: "Central", bedroomTypes: [0, 1], minRent: 1100, maxRent: 1300, rating: 3.8, specials: "First month free on 1BR only", leaseTermMonths: 12, yearBuilt: 1985, yearRenovated: null, isRenovated: false, coords: [30.3100, -97.7350],
+              discounts: { 0: { months: 0, giftCard: 0 }, 1: { months: 1, giftCard: 0 } } },
+            { name: "77 Degrees", location: "North Austin Updated", area: "North", bedroomTypes: [1, 2, 3], minRent: 1400, maxRent: 1800, rating: 4.3, specials: "2 months free on all units", leaseTermMonths: 14, yearBuilt: 2005, yearRenovated: 2021, isRenovated: true, coords: [30.3700, -97.7100],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 }, 3: { months: 2, giftCard: 0 } } },
+            { name: "AMLI Downtown", location: "South Congress Renovated", area: "South Central", bedroomTypes: [1, 2], minRent: 1650, maxRent: 1950, rating: 4.5, specials: "6 weeks free + $500 credit on 2BR", leaseTermMonths: 12, yearBuilt: 2000, yearRenovated: 2022, isRenovated: true, coords: [30.2450, -97.7650],
+              discounts: { 1: { months: 1, giftCard: 0 }, 2: { months: 1.5, giftCard: 500 } } },
+            { name: "SkyHouse Austin", location: "East Austin - Vintage", area: "East", bedroomTypes: [1, 2], minRent: 1050, maxRent: 1350, rating: 4.0, specials: "3 months free on all units", leaseTermMonths: 12, yearBuilt: 1990, yearRenovated: null, isRenovated: false, coords: [30.2800, -97.6900],
+              discounts: { 1: { months: 3, giftCard: 0 }, 2: { months: 3, giftCard: 0 } } },
+            { name: "The Independent", location: "Northeast Austin", area: "Northeast", bedroomTypes: [1, 2], minRent: 1250, maxRent: 1550, rating: 4.4, specials: "2 months free + $300 gift card on 1BR", leaseTermMonths: 12, yearBuilt: 2018, yearRenovated: null, isRenovated: false, coords: [30.3850, -97.6350],
+              discounts: { 1: { months: 2, giftCard: 300 }, 2: { months: 1.5, giftCard: 0 } } },
+            { name: "Post South Lamar", location: "Southeast Austin", area: "Southeast", bedroomTypes: [1, 2, 3], minRent: 1200, maxRent: 1700, rating: 4.2, specials: "10 weeks free on 2BR & 3BR", leaseTermMonths: 15, yearBuilt: 2020, yearRenovated: null, isRenovated: false, coords: [30.1700, -97.7200],
+              discounts: { 1: { months: 1, giftCard: 0 }, 2: { months: 2.5, giftCard: 0 }, 3: { months: 2.5, giftCard: 0 } } },
+            { name: "Gables Park Plaza", location: "Southwest Austin", area: "Southwest", bedroomTypes: [2, 3], minRent: 1600, maxRent: 2000, rating: 4.6, specials: "6 weeks free on all units", leaseTermMonths: 12, yearBuilt: 2021, yearRenovated: null, isRenovated: false, coords: [30.2300, -97.8700],
+              discounts: { 2: { months: 1.5, giftCard: 0 }, 3: { months: 1.5, giftCard: 0 } } },
+            { name: "The Monarch", location: "Far West Austin", area: "Far West", bedroomTypes: [1, 2], minRent: 1750, maxRent: 2050, rating: 4.7, specials: "2 months free on all units", leaseTermMonths: 13, yearBuilt: 2022, yearRenovated: null, isRenovated: false, coords: [30.3600, -97.7550],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 } } },
+            { name: "Elan East", location: "West Austin", area: "West", bedroomTypes: [1, 2, 3], minRent: 1900, maxRent: 2400, rating: 4.8, specials: "8 weeks free + $750 gift card on 2BR+", leaseTermMonths: 12, yearBuilt: 2023, yearRenovated: null, isRenovated: false, coords: [30.3000, -97.8200],
+              discounts: { 1: { months: 1, giftCard: 0 }, 2: { months: 2, giftCard: 750 }, 3: { months: 2, giftCard: 750 } } },
+            { name: "Ballpark Lofts", location: "Wells Branch", area: "Wells Branch", bedroomTypes: [1, 2], minRent: 1350, maxRent: 1650, rating: 4.3, specials: "First 2 months free on all units", leaseTermMonths: 12, yearBuilt: 2019, yearRenovated: null, isRenovated: false, coords: [30.4450, -97.6800],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 } } },
+            { name: "Gables Central", location: "Northwest Austin", area: "Northwest", bedroomTypes: [1, 2, 3], minRent: 1550, maxRent: 2100, rating: 4.5, specials: "6 weeks free + $500 credit on 1BR & 2BR", leaseTermMonths: 12, yearBuilt: 2020, yearRenovated: null, isRenovated: false, coords: [30.4500, -97.8000],
+              discounts: { 1: { months: 1.5, giftCard: 500 }, 2: { months: 1.5, giftCard: 500 }, 3: { months: 0.5, giftCard: 0 } } },
+            // Surrounding Cities
+            { name: "Barton Creek Landing", location: "Round Rock", area: "Round Rock", bedroomTypes: [2, 3], minRent: 1700, maxRent: 2100, rating: 4.5, specials: "Up to $1,500 off first month on 2BR", leaseTermMonths: 12, yearBuilt: 2020, yearRenovated: null, isRenovated: false, coords: [30.5200, -97.6800],
+              discounts: { 2: { months: 1, giftCard: 0 }, 3: { months: 0.5, giftCard: 0 } } },
+            { name: "Broadstone Domain", location: "Cedar Park", area: "Cedar Park", bedroomTypes: [1, 2], minRent: 1550, maxRent: 1850, rating: 4.7, specials: "2 months free on all units", leaseTermMonths: 14, yearBuilt: 2018, yearRenovated: null, isRenovated: false, coords: [30.5050, -97.8200],
+              discounts: { 1: { months: 2, giftCard: 0 }, 2: { months: 2, giftCard: 0 } } },
+            { name: "Novel Muesum Reach", location: "Pflugerville", area: "Pflugerville", bedroomTypes: [2, 3], minRent: 1450, maxRent: 1850, rating: 4.4, specials: "6 weeks free + $750 gift card on 2BR", leaseTermMonths: 12, yearBuilt: 2017, yearRenovated: null, isRenovated: false, coords: [30.4400, -97.6200],
+              discounts: { 2: { months: 1.5, giftCard: 750 }, 3: { months: 1, giftCard: 0 } } },
+            { name: "AMLI on 2nd", location: "Georgetown", area: "Georgetown", bedroomTypes: [1, 2, 3], minRent: 1400, maxRent: 2100, rating: 4.8, specials: "10 weeks free on all units", leaseTermMonths: 15, yearBuilt: 2022, yearRenovated: null, isRenovated: false, coords: [30.6500, -97.6800],
+              discounts: { 1: { months: 2.5, giftCard: 0 }, 2: { months: 2.5, giftCard: 0 }, 3: { months: 2.5, giftCard: 0 } } }
+        ];
+
+        // Calculate rent for specific bedroom type based on property's rent range
+        function getRentForBedroom(property, bedroomType) {
+            // Handle "Call for pricing" properties
+            if (property.minRent === -1) {
+                return -1; // Special indicator for "Call for pricing"
+            }
+            
+            const types = property.bedroomTypes;
+            const minBed = Math.min(...types);
+            const maxBed = Math.max(...types);
+            
+            // If only one bedroom type or requested type matches min, return minRent
+            if (minBed === maxBed || bedroomType === minBed) return property.minRent;
+            if (bedroomType === maxBed) return property.maxRent;
+            
+            // Calculate proportional rent based on position in range
+            const range = property.maxRent - property.minRent;
+            const bedroomRange = maxBed - minBed;
+            const position = (bedroomType - minBed) / bedroomRange;
+            
+            return Math.round(property.minRent + (range * position));
+        }
+
+        // Calculate effective rent after specials for a specific bedroom type
+        function calculateEffectiveRent(baseRent, property, bedroomType) {
+            // Handle "Call for pricing" properties
+            if (baseRent === -1) {
+                return -1; // Return -1 to indicate "Call for pricing"
+            }
+            
+            // Get discount for this specific bedroom type
+            const discountInfo = property.discounts[bedroomType] || { months: 0, giftCard: 0 };
+            
+            // If no discount, return base rent
+            if (discountInfo.months === 0 && discountInfo.giftCard === 0) {
+                return baseRent;
+            }
+            
+            // Calculate discount
+            const freeRentValue = baseRent * discountInfo.months;
+            const giftCardValue = discountInfo.giftCard;
+            const totalDiscount = freeRentValue + giftCardValue;
+            const monthlyDiscount = totalDiscount / property.leaseTermMonths;
+            const effectiveRent = Math.round(baseRent - monthlyDiscount);
+            
+            // CRITICAL VALIDATION: Never return $0 or negative rent
+            if (effectiveRent <= 0) {
+                console.error(`❌ ERROR: ${property.name} - Effective rent calculated as $${effectiveRent}`);
+                console.error(`   Base: $${baseRent}, Months Free: ${discountInfo.months}, Gift Card: $${discountInfo.giftCard}, Lease: ${property.leaseTermMonths} mo`);
+                console.error(`   Returning base rent as fallback.`);
+                return baseRent;
+            }
+            
+            // Sanity check: Effective rent should be at least 20% of base rent
+            if (effectiveRent < baseRent * 0.2) {
+                console.warn(`⚠️ WARNING: ${property.name} - Effective rent ($${effectiveRent}) is less than 20% of base rent ($${baseRent})`);
+                console.warn(`   Months Free: ${discountInfo.months}, Gift Card: $${discountInfo.giftCard}, Lease: ${property.leaseTermMonths} mo`);
+                console.warn(`   Please verify the specials data in Google Sheets.`);
+            }
+            
+            return effectiveRent;
+        }
+        
+        // Check if bedroom type has any special/discount
+        function bedroomHasSpecial(property, bedroomType) {
+            const discountInfo = property.discounts[bedroomType];
+            if (!discountInfo) return false;
+            return discountInfo.months > 0 || discountInfo.giftCard > 0;
+        }
+
+        // Get bedroom display text
+        function getBedroomDisplay(bedroomTypes) {
+            const labels = { 0: 'Studio', 1: '1 BR', 2: '2 BR', 3: '3 BR' };
+            if (bedroomTypes.length === 1) return labels[bedroomTypes[0]];
+            const sorted = [...bedroomTypes].sort((a,b) => a-b);
+            const min = sorted[0];
+            const max = sorted[sorted.length - 1];
+            return `${labels[min]} - ${labels[max]}`;
+        }
+
+        // Check if property has specific bedroom type
+        function hasBedroomType(property, filterValue) {
+            if (!filterValue) return true;
+            const bedNum = filterValue === 'Studio' ? 0 : parseInt(filterValue);
+            return property.bedroomTypes.includes(bedNum);
+        }
+
+        // Get selected bedroom number from filter (or null if "Any")
+        function getSelectedBedroomNum() {
+            const beds = document.getElementById('bedroomsSelect').value;
+            if (!beds) return null;
+            return beds === 'Studio' ? 0 : parseInt(beds);
+        }
+
+        function getPropertyClass(p) { 
+            // Use the class defined in Google Sheets Column A
+            // Fall back to age-based calculation only if class is missing
+            if (p.class && (p.class === 'A' || p.class === 'B' || p.class === 'C')) {
+                return p.class;
+            }
+            
+            // Fallback: Calculate from age if no class specified
+            const effectiveYear = p.yearRenovated || p.yearBuilt;
+            if (!effectiveYear) return 'B'; // Default to B if no year data
+            const age = currentYear - effectiveYear; 
+            return age <= 15 ? 'A' : age <= 30 ? 'B' : 'C'; 
+        }
+        
+        // Pre-calculate property class for each property
+        properties.forEach(p => p.calculatedClass = getPropertyClass(p));
+        let filteredProperties = [];
+        let comparedProperties = new Set();
+
+        // Get center of polygon for checkmark placement
+        function getPolygonCenter(coords) {
+            let latSum = 0, lngSum = 0;
+            coords.forEach(c => { latSum += c[0]; lngSum += c[1]; });
+            return [latSum / coords.length, lngSum / coords.length];
+        }
+
+        // Create checkmark icon
+        function createCheckmarkIcon() {
+            return L.divIcon({
+                className: 'area-checkmark-wrapper',
+                html: '<div class="area-checkmark">&#x2713;</div>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+        }
+
+
+        // Store label markers
+        let areaLabels = {};
+        let mobileAreaLabels = {};
+
+        function updateAreaLabels(targetMap, labelStorage, polygonStorage, checkmarkStorage) {
+            // Remove old labels
+            Object.values(labelStorage).forEach(label => targetMap.removeLayer(label));
+            labelStorage = {};
+            
+            // Add labels only to selected areas, positioned below checkmarks
+            selectedAreas.forEach(areaName => {
+                const polygon = polygonStorage[areaName];
+                if (!polygon) return;
+                
+                const propertyCount = filteredProperties.filter(p => p.area === areaName).length;
+                
+                if (propertyCount > 0) {
+                    // Get checkmark position (same as polygon center)
+                    const checkmarkPos = getPolygonCenter(areas[areaName]);
+                    
+                    // Offset the label to the RIGHT of checkmark (2px gap)
+                    // Checkmark is 28px wide (14px radius), so offset by 14 + 2 = 16px right
+                    // Move up 5px to vertically center with checkmark
+                    const labelPos = targetMap.layerPointToLatLng(
+                        targetMap.latLngToLayerPoint(checkmarkPos).add([16, -5])
+                    );
+                    
+                    const label = L.marker(labelPos, {
+                        icon: L.divIcon({
+                            className: 'area-property-count-label',
+                            html: `<div style="background: rgba(203, 45, 111, 0.95); color: white; padding: 0.35rem 0.7rem; border-radius: 16px; font-weight: 700; font-size: 0.8rem; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">${propertyCount} ${propertyCount === 1 ? 'property' : 'properties'}</div>`,
+                            iconSize: null,
+                            iconAnchor: [0, 12]
+                        })
+                    }).addTo(targetMap);
+                    labelStorage[areaName] = label;
+                }
+            });
+            
+            return labelStorage;
+        }
+
+        function createPolygons(targetMap, polygonStorage, checkmarkStorage, isMobile = false) {
+            Object.entries(areas).forEach(([name, coords]) => {
+                const isSelected = selectedAreas.has(name);
+                const polygon = L.polygon(coords, {
+                    color: '#00839b',
+                    weight: 1,
+                    fillOpacity: isSelected ? 0.4 : 0.15,
+                    fillColor: isSelected ? '#00839b' : '#00839b'
+                }).addTo(targetMap);
+
+                // Dynamic popup that updates based on selection state
+                polygon.on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    toggleAreaSelection(name);
+                });
+
+                polygon.on('mouseover', function() {
+                    const selected = selectedAreas.has(name);
+                    if (!selected) {
+                        this.setStyle({ fillOpacity: 0.3 });
+                    }
+                    // Show tooltip with landmarks and bullet points
+                    const desc = areaDescriptions[name];
+                    let tooltipText = `<b>${name}</b>`;
+                    
+                    if (desc) {
+                        // Add landmarks
+                        tooltipText += `<br><span style="font-size: 0.85em; color: #555; font-style: italic;">${desc.landmarks}</span>`;
+                        // Add bullet points
+                        tooltipText += '<ul style="margin: 0.5em 0 0 0; padding-left: 1.2em; font-size: 0.88em; line-height: 1.5;">';
+                        desc.bullets.forEach(bullet => {
+                            tooltipText += `<li>${bullet}</li>`;
+                        });
+                        tooltipText += '</ul>';
+                    }
+                    
+                    tooltipText += `<br><span style="font-size: 0.85em; font-style: italic; font-weight: bold;">${selected ? '&#x2713; Click to deselect' : 'Click to select'}</span>`;
+                    
+                    this.bindTooltip(tooltipText, {
+                        sticky: true,
+                        className: 'area-tooltip'
+                    }).openTooltip();
+                });
+
+                polygon.on('mouseout', function() {
+                    if (!selectedAreas.has(name)) {
+                        this.setStyle({ fillOpacity: 0.15 });
+                    }
+                    this.closeTooltip();
+                });
+
+                polygonStorage[name] = polygon;
+            });
+        }
+
+        function updateMapCheckmarks(targetMap, checkmarkStorage, polygonStorage) {
+            // Remove existing checkmarks
+            Object.values(checkmarkStorage).forEach(marker => {
+                if (marker) targetMap.removeLayer(marker);
+            });
+
+            // Add checkmarks for selected areas
+            selectedAreas.forEach(areaName => {
+                if (areas[areaName]) {
+                    const center = getPolygonCenter(areas[areaName]);
+                    const marker = L.marker(center, { icon: createCheckmarkIcon() }).addTo(targetMap);
+                    checkmarkStorage[areaName] = marker;
+                }
+            });
+        }
+        
+        // Convenience wrapper to update all checkmarks
+        function updateAllCheckmarks() {
+            updateMapCheckmarks(map, checkmarkMarkers, polygons);
+            if (mobileMap) {
+                updateMapCheckmarks(mobileMap, mobileCheckmarkMarkers, mobilePolygons);
+            }
+        }
+
+        function updatePropertyMarkers(targetMap, markerArray) {
+            // Clear existing markers
+            markerArray.forEach(m => targetMap.removeLayer(m));
+            markerArray.length = 0;
+
+            // Only add markers for properties in selected areas
+            if (selectedAreas.size === 0) return;
+            
+            const selectedBedNum = getSelectedBedroomNum();
+            const bedroomLabels = { 0: 'Studio', 1: '1 BR', 2: '2 BR', 3: '3 BR' };
+
+            properties.forEach(prop => {
+                if (selectedAreas.has(prop.area) && prop.coords) {
+                    // Calculate pricing for this property
+                    let pricingBedroom;
+                    if (selectedBedNum !== null && prop.bedroomTypes.includes(selectedBedNum)) {
+                        pricingBedroom = selectedBedNum;
+                    } else {
+                        pricingBedroom = Math.min(...prop.bedroomTypes);
+                    }
+                    
+                    const baseRent = getRentForBedroom(prop, pricingBedroom);
+                    const effectiveRent = calculateEffectiveRent(baseRent, prop, pricingBedroom);
+                    const hasSpecialForBedroom = bedroomHasSpecial(prop, pricingBedroom);
+                    const displayEffective = hasSpecialForBedroom ? effectiveRent : baseRent;
+                    
+                    // Calculate discount % with NaN protection
+                    let discount = 0;
+                    if (hasSpecialForBedroom && baseRent > 0 && !isNaN(baseRent) && !isNaN(effectiveRent)) {
+                        discount = Math.round(((baseRent - effectiveRent) / baseRent) * 100);
+                        // Additional safety: ensure discount is reasonable (0-100%)
+                        if (isNaN(discount) || discount < 0) discount = 0;
+                        if (discount > 100) discount = 100;
+                    }
+                    
+                    const bedroomText = selectedBedNum !== null ? bedroomLabels[pricingBedroom] : getBedroomDisplay(prop.bedroomTypes);
+                    
+                    // Property markers hidden - showing count labels instead
+                    // const marker = L.circleMarker(prop.coords, {
+                    //     radius: 28,
+                    //     fillColor: '#cb2d6f',
+                    //     color: '#ffffff',
+                    //     weight: 3,
+                    //     fillOpacity: 1.0
+                    // }).addTo(targetMap);
+                    // marker.bindPopup(...);
+                    // markerArray.push(marker);
+                }
+            });
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: true }).setView([30.2672, -97.7431], 10);
+            // Position zoom control to top-left
+            map.zoomControl.setPosition('topleft');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Â© OpenStreetMap', maxZoom: 18 }).addTo(map);
+            createPolygons(map, polygons, checkmarkMarkers);
+        }
+
+        function initMobileMap() {
+            if (mobileMap) return;
+            mobileMap = L.map('mobileMap', { zoomControl: true }).setView([30.2672, -97.7431], 10);
+            mobileMap.zoomControl.setPosition('topleft');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Â© OpenStreetMap', maxZoom: 18 }).addTo(mobileMap);
+            createPolygons(mobileMap, mobilePolygons, mobileCheckmarkMarkers, true);
+        }
+
+        function toggleAreaSelection(areaName) {
+            if (selectedAreas.has(areaName)) {
+                selectedAreas.delete(areaName);
+            } else if (selectedAreas.size < MAX_AREAS) {
+                selectedAreas.add(areaName);
+            } else {
+                alert(`Max ${MAX_AREAS} areas. Remove one first.`);
+                return;
+            }
+            updatePolygonStyles();
+            updateSelectedAreasDisplay();
+            updateAllCheckmarks();
+            updatePropertyMarkers(map, propertyMarkers);
+            if (mobileMap) {
+                updatePropertyMarkers(mobileMap, mobilePropertyMarkers);
+            }
+            applyFilters();
+        }
+
+        function updatePolygonStyles() {
+            [polygons, mobilePolygons].forEach(storage => {
+                Object.entries(storage).forEach(([name, polygon]) => {
+                    const isSelected = selectedAreas.has(name);
+                    polygon.setStyle({
+                        color: '#00839b',
+                        fillColor: '#00839b',
+                        fillOpacity: isSelected ? 0.4 : 0.15,
+                        weight: 1
+                    });
+                    // Close any open tooltips so they refresh on next hover
+                    polygon.closeTooltip();
+                });
+            });
+        }
+
+        function updateSelectedAreasDisplay() {
+            const display = document.getElementById('selectedAreasDisplay');
+            if (selectedAreas.size === 0) {
+                display.innerHTML = '<span class="area-limit-note">Click map or select above</span>';
+            } else {
+                display.innerHTML = Array.from(selectedAreas).map(a => 
+                    `<span class="selected-area-tag">${a}<button onclick="removeAreaSelection('${a}')">&times;</button></span>`
+                ).join('');
+                if (selectedAreas.size < MAX_AREAS) {
+                    display.innerHTML += `<span class="area-limit-note">(${MAX_AREAS - selectedAreas.size} more)</span>`;
+                }
+            }
+        }
+
+        function removeAreaSelection(name) {
+            selectedAreas.delete(name);
+            updatePolygonStyles();
+            updateSelectedAreasDisplay();
+            updateAllCheckmarks();
+            updatePropertyMarkers(map, propertyMarkers);
+            if (mobileMap) {
+                updatePropertyMarkers(mobileMap, mobilePropertyMarkers);
+            }
+            applyFilters();
+        }
+
+        function addAreaSelection() {
+            const select = document.getElementById('areaSelect');
+            const name = select.value;
+            if (name) {
+                if (selectedAreas.has(name)) {
+                    selectedAreas.delete(name);
+                } else if (selectedAreas.size < MAX_AREAS) {
+                    selectedAreas.add(name);
+                } else {
+                    alert(`Max ${MAX_AREAS} areas. Remove one first.`);
+                }
+                select.value = '';
+                updatePolygonStyles();
+                updateSelectedAreasDisplay();
+                updateAllCheckmarks();
+                updatePropertyMarkers(map, propertyMarkers);
+                if (mobileMap) {
+                    updatePropertyMarkers(mobileMap, mobilePropertyMarkers);
+                }
+                applyFilters();
+            }
+        }
+
+        function openMobileMap() {
+            document.getElementById('mobileMapOverlay').classList.add('active');
+            initMobileMap();
+            setTimeout(() => {
+                mobileMap.invalidateSize();
+                updateMapCheckmarks(mobileMap, mobileCheckmarkMarkers, mobilePolygons);
+                updatePropertyMarkers(mobileMap, mobilePropertyMarkers);
+            }, 100);
+        }
+
+        function closeMobileMap() {
+            document.getElementById('mobileMapOverlay').classList.remove('active');
+        }
+
+        function switchPropertyType(type) {
+            currentPropertyType = type;
+            const incomeBanner = document.getElementById('mapIncomeBanner');
+            
+            if (type === 'tax-credit') {
+                // Show income limits banner on map
+                incomeBanner.style.display = 'block';
+                document.body.classList.add('tax-credit-mode');
+            } else {
+                // Hide income limits banner
+                incomeBanner.style.display = 'none';
+                document.body.classList.remove('tax-credit-mode');
+            }
+            
+            // Reapply filters to show correct properties
+            applyFilters();
+        }
+
+        function hasUserSubmittedForm() {
+            // Check if user has submitted form (for analytics/tracking only)
+            // Property names are always visible - form is just for emailing results
+            return localStorage.getItem('formSubmitted') === 'true';
+        }
+
+
+        function compareTop5() {
+            // Get top 5 properties from current filtered list
+            const top5 = filteredProperties.slice(0, Math.min(5, filteredProperties.length));
+            
+            // Clear current comparison
+            comparedProperties.clear();
+            
+            // Add top 5 to comparison
+            top5.forEach(p => comparedProperties.add(p.name));
+            
+            // Update UI
+            updateComparisonBar();
+            renderProperties();
+            
+            // Open modal with top 5
+            openModal(Array.from(comparedProperties), null);
+        }
+
+        function getBestForTag(property) {
+            const selectedBedNum = getSelectedBedroomNum();
+            const currentYear = new Date().getFullYear();
+            const age = property.yearBuilt ? (currentYear - property.yearBuilt) : null;
+            
+            // Based on price tiers
+            if (property.effectiveRent < 1200) return "Budget-conscious renters";
+            if (property.effectiveRent < 1600 && property.discount >= 10) return "Smart money savers";
+            if (property.effectiveRent < 1600) return "Value seekers";
+            if (property.effectiveRent > 2800) return "Premium lifestyle";
+            if (property.effectiveRent > 2200) return "Upscale living";
+            
+            // Based on class + features
+            if (property.calculatedClass === 'A' && property.rating >= 4.5) return "Luxury enthusiasts";
+            if (property.calculatedClass === 'A' && age && age <= 5) return "Modern professionals";
+            if (property.calculatedClass === 'A') return "High-end amenities";
+            if (property.calculatedClass === 'B' && property.discount >= 15) return "Deal hunters";
+            if (property.calculatedClass === 'B' && property.rating >= 4.2) return "Quality-conscious renters";
+            if (property.calculatedClass === 'C' && property.rating >= 4.0) return "Value hunters";
+            
+            // Based on age/condition
+            if (age && age <= 3) return "New construction fans";
+            if (age && age <= 8 && property.isRenovated) return "Move-in ready seekers";
+            if (property.isRenovated) return "Updated space lovers";
+            
+            // Based on discount
+            if (property.discount >= 20) return "Deal maximizers";
+            if (property.discount >= 15) return "Savvy shoppers";
+            
+            // Based on bedrooms if filtered
+            if (selectedBedNum === 0) return "Studio lifestyle";
+            if (selectedBedNum === 3) return "Growing families";
+            if (selectedBedNum === 2) return "Small families & roommates";
+            
+            // Default
+            return "Quality renters";
+        }
+
+        function renderProperties() {
+            const container = document.getElementById('propertiesList');
+            const selectedBedNum = getSelectedBedroomNum();
+            const bedroomLabels = { 0: 'Studio', 1: '1 BR', 2: '2 BR', 3: '3 BR' };
+            
+            // Add refresh animation
+            container.classList.add('refreshing');
+            setTimeout(() => container.classList.remove('refreshing'), 300);
+
+            if (selectedAreas.size === 0) {
+                container.innerHTML = `
+                    <div class="select-areas-prompt">
+                        <h3>&#x1F44B; Let's Find Your Perfect Place!</h3>
+                        <p style="line-height: 1.6; margin-bottom: 0.5rem;">Just follow these 3 easy steps — start from the top and work your way down:</p>
+                        <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
+                            <strong>1️⃣ Choose Your Property Type</strong><br>
+                            Select "Market Rate" (open to all applicants) or "Tax Credit" if you qualify under the income limits shown on the map.
+                        </p>
+                        <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
+                            <strong>2️⃣ Pick Your Area</strong><br>
+                            Tap the map or use the dropdown to select up to 5 neighborhoods you'd like to explore.
+                        </p>
+                        <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
+                            <strong>3️⃣ Set Your Filters</strong><br>
+                            Choose your bedrooms, budget, property class, and amenities to narrow down the best matches for you.
+                        </p>
+                        <p style="margin-top: 0.8rem; font-weight: 600; color: var(--teal);">&#x1F449; Start by clicking an area on the map — your matches will appear instantly!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Add results summary with area names
+            const areaNames = Array.from(selectedAreas).sort().join(', ');
+            const resultsSummary = `
+                <div class="results-summary" style="padding: 0.75rem 1rem; background: #f0f9ff; border-left: 4px solid var(--teal); margin-bottom: 1rem; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: var(--teal); font-size: 0.9rem;">Showing ${filteredProperties.length} ${filteredProperties.length === 1 ? 'apartment' : 'apartments'}</strong> in 
+                    <span style="font-weight: 600; color: #1e3a8a;">${areaNames}</span>
+                </div>
+            `;
+
+            if (filteredProperties.length === 0) {
+                container.innerHTML = resultsSummary + '<div class="no-results"><h3>No properties match</h3><p>Try adjusting filters</p></div>';
+                return;
+            }
+
+            // Calculate which properties should have hidden names
+            // Top 5 in each category (globally): discount %, lowest price, highest rating, best deals
+            const hiddenPropertyNames = new Set();
+            
+            // Top 5 by discount % (globally - all properties)
+            const top5ByDiscount = [...filteredProperties]
+                .filter(p => p.discount > 0)
+                .sort((a, b) => b.discount - a.discount)
+                .slice(0, 5);
+            top5ByDiscount.forEach(p => hiddenPropertyNames.add(p.name));
+            
+            // Top 5 by lowest price (effective rent)
+            const top5ByPrice = [...filteredProperties]
+                .sort((a, b) => a.effectiveRent - b.effectiveRent)
+                .slice(0, 5);
+            top5ByPrice.forEach(p => hiddenPropertyNames.add(p.name));
+            
+            // Top 5 by highest rating
+            const top5ByRating = [...filteredProperties]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 5);
+            top5ByRating.forEach(p => hiddenPropertyNames.add(p.name));
+            
+            // Top 5 "best deals" (combination of discount and rating)
+            const top5BestDeals = [...filteredProperties]
+                .filter(p => p.discount > 0)
+                .map(p => ({ ...p, dealScore: (p.discount * 0.6) + (p.rating * 10) }))
+                .sort((a, b) => b.dealScore - a.dealScore)
+                .slice(0, 5);
+            top5BestDeals.forEach(p => hiddenPropertyNames.add(p.name));
+
+            // Add "Compare Top 5" button above first property
+            let compareTop5Button = '';
+            if (filteredProperties.length > 0) {
+                compareTop5Button = `
+                    <button onclick="compareTop5()" class="shimmer-button" style="width: 100%; background: linear-gradient(135deg, #cb2d6f 0%, #e84a8a 100%); color: white; padding: 1.2rem; border: 2px solid #1a1a1a; border-radius: 12px; margin-bottom: 1.8rem; text-align: center; cursor: pointer; box-shadow: 0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2); font-family: inherit; transition: all 0.3s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(203,45,111,0.6), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';">
+                        <div style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">⚡ Get My Top ${Math.min(5, filteredProperties.length)} ${filteredProperties.length === 1 ? 'Match' : 'Matches'}</div>
+                        <div style="font-size: 0.88rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
+                    </button>
+                `;
+            }
+            
+            // Check if user has submitted form - this determines if names/addresses are revealed
+            const hasSubmittedForm = hasUserSubmittedForm();
+            
+            // Get bedroom type for results summary
+            const bedroomFilterValue = document.getElementById('bedroomsSelect').value;
+            let bedroomTypeText = '';
+            
+            if (bedroomFilterValue === 'Studio') {
+                bedroomTypeText = 'studio ';
+            } else if (bedroomFilterValue === '1') {
+                bedroomTypeText = 'one bedroom ';
+            } else if (bedroomFilterValue === '2') {
+                bedroomTypeText = 'two bedroom ';
+            } else if (bedroomFilterValue === '3') {
+                bedroomTypeText = 'three bedroom ';
+            }
+            // If empty (Any), bedroomTypeText stays empty - just "apartments"
+            
+            // Get class filter for results summary
+            const classFilterValue = document.getElementById('classSelect').value;
+            let classText = '';
+            
+            if (classFilterValue === 'NEW') {
+                classText = 'brand new ';
+            } else if (classFilterValue === 'A') {
+                classText = 'Class A ';
+            } else if (classFilterValue === 'B') {
+                classText = 'Class B ';
+            } else if (classFilterValue === 'C') {
+                classText = 'Class C ';
+            }
+            
+            // Get renovated filter for results summary
+            const renovatedFilterValue = document.getElementById('renovatedSelect').value;
+            let renovatedText = '';
+            
+            if (renovatedFilterValue === 'yes') {
+                renovatedText = 'renovated ';
+            } else if (renovatedFilterValue === 'no') {
+                renovatedText = 'non-renovated ';
+            }
+            
+            // Calculate price range from filtered properties
+            let priceRangeText = '';
+            if (filteredProperties.length > 0) {
+                const prices = filteredProperties.map(p => p.effectiveRent).filter(price => price > 0);
+                if (prices.length > 0) {
+                    const minPrice = Math.min(...prices);
+                    const maxPrice = Math.max(...prices);
+                    priceRangeText = ` for $${minPrice.toLocaleString()}-$${maxPrice.toLocaleString()}/mo`;
+                }
+            }
+            
+            // Results summary with area names, bedroom type, class, renovated status, and price range
+            const areaNamesList = Array.from(selectedAreas).sort().join(', ');
+            const resultsSummaryHTML = `
+                <div class="results-summary" style="padding: 0.75rem 1rem; background: #f0f9ff; border-left: 4px solid var(--teal); margin-bottom: 1rem; border-radius: 4px; font-size: 0.85rem;">
+                    <strong style="color: var(--teal); font-size: 0.9rem;">Showing ${filteredProperties.length} ${bedroomTypeText}${classText}${renovatedText}${filteredProperties.length === 1 ? 'apartment' : 'apartments'}</strong> in 
+                    <span style="font-weight: 600; color: #1e3a8a;">${areaNamesList}</span>${priceRangeText}
+                </div>
+            `;
+            
+            container.innerHTML = resultsSummaryHTML + compareTop5Button + filteredProperties.map((p, i) => {
+                const isCompared = comparedProperties.has(p.name);
+                let rankClass = '', badge = '', propertyTitle = '', displayLocation = '';
+                
+                // Dynamic bedroom display based on filter selection
+                const bedroomFilterValue = document.getElementById('bedroomsSelect').value;
+                let bedroomDisplay = p.bedrooms; // Default: show full range
+                
+                if (bedroomFilterValue !== '') {
+                    // User selected a specific bedroom type - show only that
+                    if (bedroomFilterValue === 'Studio') {
+                        bedroomDisplay = 'Studio';
+                    } else {
+                        bedroomDisplay = `${bedroomFilterValue} BR`;
+                    }
+                }
+                
+                // Check if this property is in top 5 for any category (for badge styling)
+                const isHiddenProperty = hiddenPropertyNames.has(p.name);
+                
+                // Hide ALL names until form submission (Hotwire-style lead capture)
+                if (!hasSubmittedForm) {
+                    // BEFORE form submission: Hide ALL property names
+                    propertyTitle = `🔒 Hidden Deal - Class ${p.calculatedClass}`;
+                    displayLocation = p.area; // Show only area, NOT address
+                } else {
+                    // AFTER form submission: Show actual names and addresses
+                    propertyTitle = p.name;
+                    displayLocation = p.location; // Show full "Area - Address"
+                }
+                
+                // Apply ranking badges to top 5 properties with TRANSPARENCY
+                if (isHiddenProperty) {
+                    let badgeText = '';
+                    let badgeReason = '';
+                    
+                    if (i === 0) { 
+                        rankClass = 'rank-1';
+                        badgeText = '&#x1F3C6; BEST OVERALL';
+                        
+                        const bestFor = getBestForTag(p);
+                        badge = `<div class="premium-badge">${badgeText} - ${bestFor}</div>`;
+                    }
+                    else if (i === 1) { 
+                        rankClass = 'rank-2';
+                        badgeText = '&#x1F948; TOP VALUE PICK';
+                        
+                        const bestFor2 = getBestForTag(p);
+                        badge = `<div class="premium-badge">${badgeText} - ${bestFor2}</div>`;
+                    }
+                    else if (i === 2) { 
+                        rankClass = 'rank-3';
+                        badgeText = '&#x1F949; GREAT CHOICE';
+                        
+                        const bestFor3 = getBestForTag(p);
+                        badge = `<div class="premium-badge">${badgeText} - ${bestFor3}</div>`;
+                    }
+                }
+                
+                const classLabel = { 'A': 'class-a', 'B': 'class-b', 'C': 'class-c' }[p.calculatedClass];
+                const yearDisplay = p.isRenovated ? `&#x1F3E2; Built ${p.yearBuilt} &#x2022; Renovated ${p.yearRenovated}` : `&#x1F3E2; Built ${p.yearBuilt}`;
+                
+                // Lease term display
+                const leaseTermDisplay = `&#x1F4C5; ${p.leaseTermMonths} mo lease`;
+                
+                // Only show rating badge if property has a rating
+                let ratingBadge = '';
+                if (p.rating && p.rating > 0) {
+                    const ratingText = p.rating >= 4.5 ? 'Excellent' : p.rating >= 4.0 ? 'Very good' : p.rating >= 3.5 ? 'Good' : 'Fair';
+                    ratingBadge = `<div class="rating-badge"><span class="rating-number">${p.rating}</span><span class="rating-label">/5 ${ratingText}</span></div>`;
+                }
+                
+                // Show which bedroom type pricing is for
+                const bedroomLabel = bedroomLabels[p.displayBedroom];
+                const pricingLabel = selectedBedNum !== null ? `${bedroomLabel}` : 'Starting at';
+                
+                // Handle case where bedroom type has no special
+                // Show bedroom-specific special text
+                let specialsText = p.specials;
+                if (!p.hasSpecial && p.specials && p.specials.toLowerCase().includes('only')) {
+                    // Property has specials, but not for this bedroom type
+                    specialsText = `No special on ${bedroomLabel}`;
+                }
+                
+                const savingsDisplay = p.hasSpecial 
+                    ? `<div class="savings-badge">Save up to $${p.savings}/mo*</div>`
+                    : `<div class="savings-badge no-special">No special on this bedroom type</div>`;
+                
+                const discountCircle = p.hasSpecial 
+                    ? `<div class="discount-circle"><div class="discount-percent">${p.discount}%</div><div class="discount-label">OFF</div></div>`
+                    : `<div class="discount-circle no-special"><div class="discount-percent" style="font-size:0.9rem;font-weight:600;">None</div></div>`;
+                
+                // Determine rent display (handle "Call for pricing" properties)
+                let effectivePriceDisplay, basePriceDisplay;
+                if (p.effectiveRent === -1 || p.baseRent === -1) {
+                    effectivePriceDisplay = 'Call for pricing';
+                    basePriceDisplay = '';
+                } else {
+                    effectivePriceDisplay = `Est. ~$${p.effectiveRent.toLocaleString()}/mo`;
+                    basePriceDisplay = `${pricingLabel}: Est. ~$${p.baseRent.toLocaleString()}/mo`;
+                }
+                
+                return `<div class="property-card ${rankClass}" onclick="openModal(['${p.name}'],event)">${badge}<div class="card-top"><div class="property-info"><div class="property-name">${propertyTitle}</div><div class="property-location">${displayLocation}</div><div class="property-meta"><span>${bedroomDisplay}</span>${ratingBadge}</div></div>${discountCircle}</div><div class="year-info">${yearDisplay} &#x2022; ${leaseTermDisplay}</div><div class="specials-tag">&#x1F381; ${specialsText}</div><div class="pricing-row"><div class="price-info"><div class="effective-price">${effectivePriceDisplay}</div>${basePriceDisplay ? `<div class="original-price">${basePriceDisplay}</div>` : ''}</div>${savingsDisplay}</div><div class="card-actions"><label class="compare-checkbox-label" onclick="event.stopPropagation();"><input type="checkbox" class="compare-checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.name}',event)"><span class="checkbox-text">Compare</span></label><button class="btn-details" onclick="openModal(['${p.name}'],event)">&#x1F513; Get Details</button></div><div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.68rem; line-height: 1.4; color: #6b7280;"><div style="margin-bottom: 0.25rem;">Built with ❤️ by <strong style="color: var(--teal);">Ross Quade</strong> in Austin</div><div style="font-size: 0.65rem;">Got a question? <strong style="color: var(--teal);"><a href="tel:512-943-6852" style="color: var(--teal); text-decoration: none;">Text 512-943-6852</a></strong></div><div style="font-size: 0.62rem; margin-top: 0.2rem; color: #9ca3af;">Property ID: <strong style="color: #6b7280;">${p.propertyCode}</strong></div></div></div>`;
+            }).join('');
+        }
+
+        function toggleCompare(name, e) { 
+            e.stopPropagation();
+            e.preventDefault();
+            
+            // Read checkbox state
+            const isChecked = e.target.checked;
+            
+            if (isChecked) {
+                // Adding to comparison
+                if (comparedProperties.size >= 5) { 
+                    alert('Maximum 5 properties can be compared at once');
+                    e.target.checked = false;
+                    return; 
+                }
+                comparedProperties.add(name);
+            } else {
+                // Removing from comparison
+                comparedProperties.delete(name);
+            }
+            
+            updateComparisonBar(); 
+            renderProperties();
+        }
+        function updateComparisonBar() { document.getElementById('compareCount').textContent = comparedProperties.size; document.getElementById('comparisonBar').classList.toggle('active', comparedProperties.size > 0); document.getElementById('mobileMapBtn').classList.toggle('has-comparison', comparedProperties.size > 0); }
+        function clearComparison() { comparedProperties.clear(); updateComparisonBar(); renderProperties(); }
+
+        function openModal(names, e) {
+            if (e) e.stopPropagation();
+            const hasSubmitted = hasUserSubmittedForm();
+            const displayNames = names.map(name => {
+                if (hasSubmitted) return name;
+                const prop = properties.find(p => p.name === name);
+                return prop ? `🔒 Hidden Deal - Class ${prop.calculatedClass}` : '🔒 Hidden Property';
+            });
+            document.getElementById('modalContent').innerHTML = `<div class="modal-header"><h2>&#x1F513; Unlock Hidden Property Details</h2><p>See exact names, addresses, and exclusive deals</p></div><div class="modal-body"><div class="selected-properties-preview"><h3>Selected Properties (${names.length})</h3>${displayNames.map(n => `<div class="selected-property-item">${n}</div>`).join('')}</div><div style="background:#fef2f2;border:2px solid#fecaca;border-radius:8px;padding:0.75rem;margin-bottom:1rem;font-size:0.8rem;color:#991b1b;"><strong>⚠️ Note:</strong> Pricing shown is estimated. Actual rent, discounts, and availability vary by unit and move-in date. A specialist will confirm exact pricing when they contact you.</div><form id="leadForm" onsubmit="handleFormSubmit(event)"><div class="form-group"><label>Full Name *</label><input type="text" required placeholder="John Doe"></div><div class="form-group"><label>Email *</label><input type="email" required placeholder="john@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" required placeholder="(512) 555-1234"></div><div class="form-group"><label>Monthly Budget *</label><input type="text" required placeholder="$1,500 - $2,000"></div><div class="form-group"><label>Move-in Date *</label><input type="date" required></div><div class="form-group"><label>Notes</label><textarea placeholder="Any special requirements..."></textarea></div><div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button><button type="submit" class="btn-submit">&#x1F513; Unlock Details</button></div></form></div>`;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        function openComparisonModal() { openModal(Array.from(comparedProperties), null); }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+        function handleFormSubmit(e) { 
+            e.preventDefault();
+            
+            // Get form data
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Add selected properties to submission
+            const selectedProps = Array.from(comparedProperties).join(', ');
+            formData.append('selectedProperties', selectedProps);
+            
+            // Send to Formspree
+            fetch(FORMSPREE_ENDPOINT, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    console.log('✅ Form submitted to Formspree successfully');
+                } else {
+                    console.error('❌ Formspree submission error');
+                }
+            }).catch(error => {
+                console.error('❌ Formspree error:', error);
+            });
+            
+            // Save that user submitted form
+            localStorage.setItem('formSubmitted', 'true');
+            alert('🎉 Success! A specialist will contact you within 24 hours.'); 
+            closeModal(); 
+            comparedProperties.clear(); 
+            updateComparisonBar(); 
+            renderProperties(); // Re-render to show unlocked property names
+        }
+
+        function checkQualificationIssues() {
+            const rental = document.getElementById('rentalHistorySelect').value, credit = document.getElementById('creditSelect').value, bg = document.getElementById('backgroundSelect').value;
+            let issues = [];
+            if (rental !== 'none') issues.push({ 'eviction': 'eviction', 'debt': 'property debt', 'broken': 'broken lease' }[rental]);
+            if (credit === 'improving') issues.push(`${credit} credit`);
+            if (bg !== 'perfect') issues.push(bg);
+            if (issues.length > 0) showQualificationModal(issues);
+            applyFilters();
+        }
+        function showQualificationModal(issues) { document.getElementById('qualificationMessage').innerHTML = `<strong>Important:</strong> You indicated having <strong>${issues.join(', ')}</strong>.<br><br>Many properties may deny your application, wasting fees ($50-$100+ each).`; document.getElementById('qualificationModal').classList.add('active'); }
+        function closeQualificationModal() { document.getElementById('qualificationModal').classList.remove('active'); document.getElementById('rentalHistorySelect').value = 'none'; document.getElementById('creditSelect').value = 'excellent'; document.getElementById('backgroundSelect').value = 'perfect'; }
+        function handleQualificationSubmit(e) { e.preventDefault(); alert('ðŸ¤ Thank you! Our specialist will contact you within 24 hours.'); closeQualificationModal(); }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PROFESSIONAL PERCENTAGE-BASED TIER SYSTEM
+        // Scales intelligently across all rent ranges!
+        // Budget renters: 5% threshold, Luxury renters: 8% threshold
+        // ═══════════════════════════════════════════════════════════════
+        function calculateDealScore(property, allFilteredProperties) {
+            const currentYear = new Date().getFullYear();
+            
+            // ───────────────────────────────────────────────────────────
+            // 1. QUALITY SCORE (0-100)
+            // This is what matters MOST within the same price tier
+            // ───────────────────────────────────────────────────────────
+            
+            // Rating component (0-100)
+            const ratingScore = property.rating > 0 ? (property.rating / 5) * 100 : 50;
+            
+            // Age component (0-100)
+            let ageScore = 0;
+            const age = property.yearBuilt ? (currentYear - property.yearBuilt) : 50;
+            
+            if (age <= 3) {
+                ageScore = 100;      // Brand New (2022-2025) - PREMIUM
+            } else if (age <= 5) {
+                ageScore = 90;       // Very New (2020-2021)
+            } else if (age <= 10) {
+                ageScore = 80;       // Modern (2015-2019)
+            } else if (age <= 15) {
+                ageScore = 70;       // Class A territory
+            } else if (age <= 25) {
+                ageScore = 55;       // Class B territory
+            } else if (age <= 35) {
+                ageScore = 40;       // Older Class B
+            } else {
+                ageScore = 25;       // Class C territory
+            }
+            
+            // Renovation bonus
+            if (property.isRenovated && property.yearRenovated) {
+                const renovAge = currentYear - property.yearRenovated;
+                if (renovAge <= 3) ageScore += 25;
+                else if (renovAge <= 5) ageScore += 20;
+                else if (renovAge <= 10) ageScore += 15;
+                else ageScore += 10;
+            } else if (property.isRenovated) {
+                ageScore += 15;
+            }
+            ageScore = Math.min(ageScore, 100);
+            
+            // Discount component (0-100)
+            const discountScore = Math.min(property.discount || 0, 100);
+            
+            // QUALITY SCORE: Rating (40%) + Age (35%) + Discount (25%)
+            // Within same price tier, THIS is what determines ranking!
+            const qualityScore = 
+                (ratingScore * 0.40) +    // 40% rating
+                (ageScore * 0.35) +       // 35% age
+                (discountScore * 0.25);   // 25% discount
+            
+            // ───────────────────────────────────────────────────────────
+            // 2. INTELLIGENT PRICE TIER SYSTEM
+            // Percentage-based thresholds that scale with rent level!
+            // Budget renters = more price-sensitive (5%)
+            // Luxury renters = less price-sensitive (8%)
+            // ───────────────────────────────────────────────────────────
+            const rents = allFilteredProperties.map(p => p.effectiveRent);
+            const minRent = Math.min(...rents);
+            const priceDifference = property.effectiveRent - minRent;
+            
+            // Calculate tier threshold based on THIS property's rent
+            // Uses progressive percentage: Higher rent = higher threshold
+            // CRITICAL: If user sets price filter, use more aggressive quality-focused thresholds!
+            function calculateTierThreshold(rent) {
+                // Check if user set a price filter (from dropdown or URL)
+                const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
+                
+                if (hasPriceFilter) {
+                    // USER SET BUDGET → Rank by QUALITY with aggressive thresholds!
+                    // Progressive: Higher budgets get slightly more generous thresholds
+                    if (rent < 2000) {
+                        // Budget/Mid-range with filter: 5% threshold (most aggressive!)
+                        // Example: $1,500 → $75 threshold
+                        return rent * 0.05;
+                    } else if (rent < 3000) {
+                        // Upper-mid with filter: 7% threshold
+                        // Example: $2,500 → $175 threshold
+                        return rent * 0.07;
+                    } else {
+                        // Luxury with filter: 10% threshold
+                        // Example: $4,000 → $400 threshold
+                        return rent * 0.10;
+                    }
+                }
+                
+                // No price filter → Use standard progressive tiers
+                if (rent < 1200) {
+                    // Budget tier: 5% threshold
+                    // $1,000 → $50 threshold
+                    return rent * 0.05;
+                } else if (rent < 2000) {
+                    // Mid-range tier: 6% threshold
+                    // $1,500 → $90 threshold
+                    return rent * 0.06;
+                } else if (rent < 3000) {
+                    // Upper-mid tier: 7% threshold
+                    // $2,500 → $175 threshold
+                    return rent * 0.07;
+                } else {
+                    // Luxury tier: 8% threshold
+                    // $4,000 → $320 threshold
+                    return rent * 0.08;
+                }
+            }
+            
+            const tierThreshold = calculateTierThreshold(property.effectiveRent);
+            
+            // SMART TIER PENALTY SYSTEM:
+            // Within threshold = No penalty (same tier!)
+            // 1-2x threshold = Small penalty (next tier)
+            // 2x+ threshold = Larger penalty (far tier)
+            let pricePenalty = 0;
+            
+            if (priceDifference <= tierThreshold) {
+                // Within tier threshold = NO PENALTY!
+                pricePenalty = 0;
+            } else if (priceDifference <= tierThreshold * 2) {
+                // 1-2x threshold = Gradual penalty (0-20 points)
+                const excessRatio = (priceDifference - tierThreshold) / tierThreshold;
+                pricePenalty = excessRatio * 20;
+            } else {
+                // 2x+ threshold = Larger penalty (20-50 points)
+                const excessRatio = (priceDifference - (tierThreshold * 2)) / tierThreshold;
+                pricePenalty = 20 + Math.min(excessRatio * 15, 30);
+            }
+            
+            // ───────────────────────────────────────────────────────────
+            // 3. BONUS POINTS (Utilities, waived fees, etc.)
+            // ───────────────────────────────────────────────────────────
+            let bonusPoints = 0;
+            const specialsLower = property.specials.toLowerCase();
+            
+            if (property.hasSpecial) bonusPoints += 5;
+            
+            if (specialsLower.includes('utilities included') || 
+                specialsLower.includes('water included') ||
+                specialsLower.includes('electric included')) {
+                bonusPoints += 10;
+            }
+            
+            if (specialsLower.includes('waived app') || 
+                specialsLower.includes('no app fee') ||
+                specialsLower.includes('no deposit') ||
+                specialsLower.includes('waived deposit')) {
+                bonusPoints += 5;
+            }
+            
+            // ───────────────────────────────────────────────────────────
+            // 4. FINAL SCORE = Quality - Price Penalty + Bonuses
+            // ───────────────────────────────────────────────────────────
+            const totalScore = qualityScore - pricePenalty + bonusPoints;
+            
+            return {
+                total: totalScore,
+                breakdown: {
+                    quality: qualityScore,
+                    rating: ratingScore * 0.40,
+                    age: ageScore * 0.35,
+                    discount: discountScore * 0.25,
+                    priceDifference: priceDifference,
+                    tierThreshold: tierThreshold,
+                    tierThresholdPercent: (tierThreshold / property.effectiveRent * 100).toFixed(1),
+                    pricePenalty: -pricePenalty,
+                    bonus: bonusPoints
+                }
+            };
+        }
+
+        function applyFilters() {
+        // Read price from dropdown if it exists
+        const priceSelect = document.getElementById('priceSelect');
+        if (priceSelect && priceSelect.value) {
+            window.urlPriceRange = priceSelect.value;
+        } else if (!window.urlPriceRange) {
+            window.urlPriceRange = null;
+        }
+        
+            const search = '';
+            const beds = document.getElementById('bedroomsSelect').value;
+            const cls = document.getElementById('classSelect').value;
+            const renov = document.getElementById('renovatedSelect').value;
+            const sort = document.getElementById('sortSelect').value;
+            
+            // Get selected bedroom as number (null if "Any")
+            const selectedBedNum = getSelectedBedroomNum();
+
+            // If no areas selected, show nothing
+            if (selectedAreas.size === 0) {
+                filteredProperties = [];
+                renderProperties();
+                return;
+            }
+
+            filteredProperties = properties.filter(p => {
+                if (!selectedAreas.has(p.area)) return false;
+                if (search && !p.name.toLowerCase().includes(search) && !p.location.toLowerCase().includes(search) && !p.area.toLowerCase().includes(search)) return false;
+                // Bedroom filter: check if property has this bedroom type
+                if (beds && !hasBedroomType(p, beds)) return false;
+                
+                // Property Class filter logic
+                if (cls) {
+                    if (cls === 'NEW') {
+                        // Brand New: Last 3 years + current year (e.g., 2022-2025 in 2025)
+                        const currentYear = new Date().getFullYear();
+                        const threeYearsAgo = currentYear - 3;
+                        if (!p.yearBuilt || p.yearBuilt < threeYearsAgo) return false;
+                    } else {
+                        // Standard A/B/C class filtering
+                        if (p.calculatedClass !== cls) return false;
+                    }
+                }
+                
+                // Renovated filter logic
+                if (renov === 'yes' && !p.isRenovated) return false; // Only show renovated
+                if (renov === 'no' && p.isRenovated) return false; // Only show non-renovated
+                
+                return true;
+            });
+
+            // Calculate dynamic pricing for each property based on selected bedroom
+            filteredProperties = filteredProperties.map(p => {
+                // Determine which bedroom to price for
+                let pricingBedroom;
+                if (selectedBedNum !== null && p.bedroomTypes.includes(selectedBedNum)) {
+                    pricingBedroom = selectedBedNum;
+                } else {
+                    // Default to lowest available bedroom type
+                    pricingBedroom = Math.min(...p.bedroomTypes);
+                }
+                
+                const baseRent = getRentForBedroom(p, pricingBedroom);
+                const effectiveRent = calculateEffectiveRent(baseRent, p, pricingBedroom);
+                const hasSpecialForBedroom = bedroomHasSpecial(p, pricingBedroom);
+                const savings = hasSpecialForBedroom ? baseRent - effectiveRent : 0;
+                
+                // Calculate discount % with NaN protection
+                let discount = 0;
+                if (hasSpecialForBedroom && baseRent > 0 && !isNaN(baseRent) && !isNaN(effectiveRent) && !isNaN(savings)) {
+                    discount = Math.round((savings / baseRent) * 100);
+                    // Additional safety: ensure discount is reasonable (0-100%)
+                    if (isNaN(discount) || discount < 0) discount = 0;
+                    if (discount > 100) discount = 100;
+                }
+                
+                return {
+                    ...p,
+                    displayBedroom: pricingBedroom,
+                    baseRent,
+                    effectiveRent: hasSpecialForBedroom ? effectiveRent : baseRent,
+                    savings,
+                    discount,
+                    hasSpecial: hasSpecialForBedroom,
+                    bedrooms: getBedroomDisplay(p.bedroomTypes)
+                };
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // APPLY PRICE RANGE FILTER (after calculating effectiveRent)
+            // ═══════════════════════════════════════════════════════════════
+            filteredProperties = filterByPriceRange(filteredProperties);
+
+            switch (sort) {
+                case 'deals':
+                    // Calculate deal scores for all properties
+                    filteredProperties.forEach(p => {
+                        const scoreData = calculateDealScore(p, filteredProperties);
+                        p.dealScore = scoreData.total;
+                        p.scoreBreakdown = scoreData.breakdown;
+                    });
+                    // Sort by score (highest first)
+                    filteredProperties.sort((a, b) => b.dealScore - a.dealScore);
+                    // Log top 5 for debugging
+                    console.log('🏆 TOP 5 BEST DEALS (Percentage-Based Tier System):');
+                    const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
+                    if (hasPriceFilter) {
+                        console.log('⚡ BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
+                    }
+                    filteredProperties.slice(0, 5).forEach((p, i) => {
+                        console.log(`${i+1}. ${p.name} - Score: ${p.dealScore.toFixed(1)}`);
+                        console.log(`   Rent: $${p.effectiveRent}, Rating: ${p.rating}★, Age: ${p.yearBuilt ? new Date().getFullYear() - p.yearBuilt : '?'} yrs`);
+                        console.log(`   Quality: ${p.scoreBreakdown.quality.toFixed(1)} (Rating: ${p.scoreBreakdown.rating.toFixed(1)}, Age: ${p.scoreBreakdown.age.toFixed(1)}, Discount: ${p.scoreBreakdown.discount.toFixed(1)})`);
+                        console.log(`   Price: $${p.scoreBreakdown.priceDifference.toFixed(0)} above cheapest (Tier: ${p.scoreBreakdown.tierThresholdPercent}% = $${p.scoreBreakdown.tierThreshold.toFixed(0)}) → Penalty: ${p.scoreBreakdown.pricePenalty.toFixed(1)}, Bonus: ${p.scoreBreakdown.bonus}`);
+                        if (p.scoreBreakdown.priceDifference <= p.scoreBreakdown.tierThreshold) {
+                            console.log(`   💡 Within ${p.scoreBreakdown.tierThresholdPercent}% tier - ranked by QUALITY only!`);
+                        }
+                    });
+                    break;
+                case 'discount': filteredProperties.sort((a, b) => b.discount - a.discount); break;
+                case 'price': filteredProperties.sort((a, b) => a.effectiveRent - b.effectiveRent); break;
+                case 'rating': filteredProperties.sort((a, b) => b.rating - a.rating); break;
+            }
+
+            renderProperties();
+            
+            // Also update map markers with new pricing
+            updatePropertyMarkers(map, propertyMarkers);
+            
+            // Update area count labels (positioned below checkmarks)
+            areaLabels = updateAreaLabels(map, areaLabels, polygons, checkmarkMarkers);
+            if (mobileMap) {
+                mobileAreaLabels = updateAreaLabels(mobileMap, mobileAreaLabels, mobilePolygons, mobileCheckmarkMarkers);
+            }
+            if (mobileMap) {
+                updatePropertyMarkers(mobileMap, mobilePropertyMarkers);
+            }
+        }
+
+        function populateAreaDropdown() {
+            const s = document.getElementById('areaSelect');
+            Object.keys(areas).sort().forEach(a => {
+                const o = document.createElement('option');
+                o.value = a;
+                // Show area name with landmarks
+                const desc = areaDescriptions[a];
+                o.textContent = desc ? `${a} – ${desc.landmarks}` : a;
+                s.appendChild(o);
+            });
+        }
+
+        // Initialize with Downtown selected and 1BR filter
+        function initializeDefaults() {
+            // Set bedroom filter to 1 BR
+            document.getElementById('bedroomsSelect').value = '1';
+            
+            // No area selected by default - let users choose
+            // selectedAreas.add(DEFAULT_AREA);
+            // updatePolygonStyles();
+            // updateAllCheckmarks();
+            // updateSelectedAreasDisplay();
+            applyFilters();
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            populateAreaDropdown();
+            initMap();
+            renderProperties(); // Show welcome message immediately before data loads
+            // Show loading progress UI
+            showLoadingProgress();
+            
+            await loadPropertiesFromGoogleSheets(); // This will call initializeDefaults() after loading
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    
+        // ═══════════════════════════════════════════════════════════════
+        // URL PARAMETER SUPPORT - Auto-filter based on URL
+        // Supports: ?bedrooms=1&propertyType=income-restricted
+        // ═══════════════════════════════════════════════════════════════
+        function getURLParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function applyURLParameters() {
+            let filtersApplied = false;
+            
+            // Check for propertyType parameter (market-rate or income-restricted)
+            const propertyTypeParam = getURLParameter('propertyType');
+            if (propertyTypeParam) {
+                const propertyTypeSelect = document.getElementById('propertyTypeSelect');
+                
+                if (propertyTypeSelect) {
+                    // Set the property type
+                    if (propertyTypeParam === 'income-restricted' || propertyTypeParam === 'tax-credit') {
+                        propertyTypeSelect.value = 'tax-credit';
+                        switchPropertyType('tax-credit');
+                    } else if (propertyTypeParam === 'market-rate') {
+                        propertyTypeSelect.value = 'market-rate';
+                        switchPropertyType('market-rate');
+                    }
+                    filtersApplied = true;
+                }
+            }
+            
+            // Check for bedrooms parameter
+            const bedroomsParam = getURLParameter('bedrooms');
+            if (bedroomsParam) {
+                const bedroomsSelect = document.getElementById('bedroomsSelect');
+                
+                if (bedroomsSelect) {
+                    // Set the bedroom filter to the URL parameter value
+                    bedroomsSelect.value = bedroomsParam;
+                    filtersApplied = true;
+                }
+            }
+            
+            // Check for class parameter (A, B, C, D)
+            const classParam = getURLParameter('class');
+            if (classParam) {
+                const classSelect = document.getElementById('classSelect');
+                
+                if (classSelect) {
+                    // Set the property class filter to the URL parameter value
+                    // Accept both uppercase and lowercase (a, A, b, B, etc.)
+                    classSelect.value = classParam.toUpperCase();
+                    filtersApplied = true;
+                }
+            }
+            
+            // Check for renovated parameter (true, yes, 1)
+            const renovatedParam = getURLParameter('renovated');
+            if (renovatedParam) {
+                const renovatedSelect = document.getElementById('renovatedSelect');
+                
+                if (renovatedSelect) {
+                    // Accept various "true" values
+                    const isTrueValue = ['true', 'yes', '1', 'on'].includes(renovatedParam.toLowerCase());
+                    if (isTrueValue) {
+                        renovatedSelect.value = 'true';
+                        filtersApplied = true;
+                    } else if (renovatedParam.toLowerCase() === 'false' || renovatedParam === '0') {
+                        renovatedSelect.value = 'false';
+                        filtersApplied = true;
+                    }
+                }
+            }
+            
+            // Check for price parameter (price ranges)
+            const priceParam = getURLParameter('price');
+            if (priceParam) {
+                // Store the price range for filtering
+                window.urlPriceRange = priceParam;
+                filtersApplied = true;
+                
+                // Set the dropdown value if dropdown exists
+                const priceSelect = document.getElementById('priceSelect');
+                if (priceSelect) {
+                    priceSelect.value = priceParam;
+                }
+            }
+            
+            // Apply all filters if any were set
+            if (filtersApplied) {
+                applyFilters();
+                
+                // Optional: Scroll to listings after a brief delay
+                setTimeout(() => {
+                    const listingsSection = document.getElementById('properties-list');
+                    if (listingsSection) {
+                        listingsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 500);
+            }
+        }
+
+
+        // ═══════════════════════════════════════════════════════════════
+        // PRICE RANGE FILTERING
+        // Supports: ?price=under-1000, 1000-1500, 1500-2000, over-2000
+        // ═══════════════════════════════════════════════════════════════
+        function filterByPriceRange(properties) {
+            if (!window.urlPriceRange) {
+                return properties; // No price filter applied
+            }
+            
+            const priceRange = window.urlPriceRange.toLowerCase();
+            
+            return properties.filter(property => {
+                // Get the rent value (use effectiveRent from pricing calculation)
+                const rent = parseFloat(property.effectiveRent || property.NetEffectiveRent || property.Rent || 0);
+                
+                // EXACT RANGES FROM AUSTIN APARTMENT LOCATORS SITE
+                if (priceRange === '750-1000' || priceRange === 'under-1000') {
+                    return rent >= 750 && rent <= 1000;
+                } else if (priceRange === '1000-1250') {
+                    return rent >= 1000 && rent <= 1250;
+                } else if (priceRange === '1250-1500') {
+                    return rent >= 1250 && rent <= 1500;
+                } else if (priceRange === '1500-1750') {
+                    return rent >= 1500 && rent <= 1750;
+                } else if (priceRange === '1750-2000') {
+                    return rent >= 1750 && rent <= 2000;
+                } else if (priceRange === '2000-2500') {
+                    return rent >= 2000 && rent <= 2500;
+                } else if (priceRange === '2500-3000') {
+                    return rent >= 2500 && rent <= 3000;
+                } else if (priceRange === '3000-5000') {
+                    return rent >= 3000 && rent <= 5000;
+                } else if (priceRange === '5000-9999' || priceRange === 'over-5000') {
+                    return rent >= 5000 && rent <= 9999;
+                } else if (priceRange === 'over-9999') {
+                    return rent > 9999;
+                }
+                
+                // Support "under-X" style queries for marketing pages
+                else if (priceRange === 'under-1250') {
+                    return rent < 1250;
+                } else if (priceRange === 'under-1500') {
+                    return rent < 1500;
+                } else if (priceRange === 'under-1750') {
+                    return rent < 1750;
+                } else if (priceRange === 'under-2000') {
+                    return rent < 2000;
+                } else if (priceRange === 'under-2500') {
+                    return rent < 2500;
+                } else if (priceRange === 'under-3000') {
+                    return rent < 3000;
+                }
+                
+                return true; // Unknown range, show all
+            });
+        }
+
+        // NOTE: To fully integrate price filtering, the filterByPriceRange() function
+        // should be called after other filters are applied but before sorting.
+        // Example: filteredProperties = filterByPriceRange(filteredProperties);
+        // This would be added in your main applyFilters() function.
+
+        // Call applyURLParameters after page is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for other initialization to complete
+            setTimeout(applyURLParameters, 100);
+        });
+
+        // Show/hide sticky compare button on mobile based on scroll
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 768 && filteredProperties.length > 0) {
+                const stickyBtn = document.getElementById('stickyCompareBtn');
+                if (stickyBtn) {
+                    clearTimeout(scrollTimeout);
+                    if (window.scrollY > 400) {
+                        stickyBtn.classList.add('show');
+                    } else {
+                        stickyBtn.classList.remove('show');
+                    }
+                }
+            }
+        });
+
+        // Also update sticky button visibility when properties render
+        const originalRenderProperties = renderProperties;
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                const stickyBtn = document.getElementById('stickyCompareBtn');
+                if (stickyBtn) stickyBtn.classList.remove('show');
+            }
+        });
+
+    </script>
+</body>
+</html>
