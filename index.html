@@ -8,27 +8,29 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-                /* SIMPLE CENTERED HEADER - Image Logo */
+/* SIMPLE CENTERED HEADER - Image Logo */
 .site-header { 
     background: #ffffff; 
-    padding: 1.5rem 2rem; 
+    padding: 1rem 2rem; 
     text-align: center; 
-    border-bottom: 1px solid #e5e7eb; 
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .logo-image { 
-    max-width: 300px; 
-    height: auto; 
-    display: inline-block; 
+    width: 140px;           /* ← EXACT match */
+    height: 115px;          /* ← EXACT match */
+    display: inline-block;
+    vertical-align: middle; /* ← Better alignment */
 }
 
 /* Mobile Responsive */
 @media (max-width: 900px) {
     .site-header { 
-        padding: 1rem; 
+        padding: 0.75rem 1rem; 
     }
     .logo-image { 
-        max-width: 220px; 
+        width: 100px;       /* ← Smaller on mobile */
+        height: auto;       /* ← Maintain aspect ratio */
     }
 }
         * { margin: 0; padding: 0; box-sizing: border-box; }
