@@ -8,6 +8,66 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* Make structure similar to main site */
+body {
+    margin: 0;
+}
+
+.wrap {
+    min-height: 100vh;
+}
+
+/* Main banner shell */
+.banner {
+    background: #ffffff;
+}
+
+/* Centered logo banner – tune padding if you need tiny up/down shifts */
+.banner--notDefault.banner--isCenteredLogo .banner__top {
+    padding: 24px 0;      /* adjust up/down a few px if needed */
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Constrain content similar to Carrot container */
+.banner__container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Logo itself */
+.brand-logo.brand__logo {
+    display: block;
+    max-width: 140px;
+    height: auto;
+}
+
+/* Screen reader only text (same behavior as Carrot) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+    .banner--notDefault.banner--isCenteredLogo .banner__top {
+        padding: 16px 0;
+    }
+
+    .brand-logo.brand__logo {
+        max-width: 120px;
+    }
+}
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --teal: #00839b; --teal-dark: #005f73; --teal-selected: #004d5c; --pink: #cb2d6f; --gold: #d4b254; --dark: #1a1a1a; --gray: #6b7280; --light: #f9fafb; --white: #ffffff; }
         body { font-family: 'Outfit', sans-serif; background: var(--light); color: var(--dark); line-height: 1.5; overflow-x: hidden; }
@@ -530,7 +590,35 @@
         </style>
 </head>
 <body>
+  <div class="wrap">
+    <!-- MATCH CARROT HEADER / LOGO -->
+    <header id="header-centered-logo" class="banner banner--notDefault banner--isCenteredLogo">
+      <div class="banner__top">
+        <div class="banner__container">
+          <div id="brand-logo" class="menu-flex">
+            <div class="brand-container brand--main-logo brand--isLogoFull brand--logoVertical" itemscope itemtype="https://schema.org/Organization">
+              <a class="brand" itemprop="url" href="https://austinapartments.com/">
+                <img
+                  itemprop="logo"
+                  class="brand-logo brand__logo"
+                  src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png"
+                  width="140"
+                  height="115"
+                  alt="Austin Apartments for Rent"
+                >
+                <div class="brand-text sr-only">
+                  <b class="brand-name" itemprop="name">Austin Apartments for Rent</b>
+                  <span class="tagline brand-tagline">Real Listings. Real Results. Real Help.</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
 
+    <!-- YOUR EXISTING SEARCH APP LAYOUT STARTS HERE -->
+    <!-- e.g. filter-bar, main-container, etc. -->
 
         <div class="filter-bar">
         <div class="filter-grid">
