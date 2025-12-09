@@ -8,6 +8,29 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+                /* SIMPLE CENTERED HEADER - Image Logo */
+.site-header { 
+    background: #ffffff; 
+    padding: 1.5rem 2rem; 
+    text-align: center; 
+    border-bottom: 1px solid #e5e7eb; 
+}
+
+.logo-image { 
+    max-width: 300px; 
+    height: auto; 
+    display: inline-block; 
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .site-header { 
+        padding: 1rem; 
+    }
+    .logo-image { 
+        max-width: 220px; 
+    }
+}
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --teal: #00839b; --teal-dark: #005f73; --teal-selected: #004d5c; --pink: #cb2d6f; --gold: #d4b254; --dark: #1a1a1a; --gray: #6b7280; --light: #f9fafb; --white: #ffffff; }
         body { font-family: 'Outfit', sans-serif; background: var(--light); color: var(--dark); line-height: 1.5; overflow-x: hidden; }
@@ -525,8 +548,10 @@
         </style>
 </head>
 <body>
-
-
+<!-- SIMPLE CENTERED HEADER - Image Logo -->
+<header class="site-header">
+    <img src="data:image/webp;base64,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" alt="Austin Apartments Team" class="logo-image">
+</header>
         <div class="filter-bar">
         <div class="filter-grid">
             
