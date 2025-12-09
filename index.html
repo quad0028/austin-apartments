@@ -8,43 +8,38 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-/* SIMPLE CENTERED HEADER - Image Logo */
+/* SIMPLE CENTERED HEADER - Match homepage logo look */
 .site-header { 
     background: #ffffff; 
-    padding: 1rem 2rem; 
+    padding: 1.25rem 2rem; 
     text-align: center; 
     border-bottom: 1px solid #e5e7eb;
 }
 
-/* Make link behave cleanly */
+/* Clickable logo link */
 .logo-link {
     display: inline-block;
     text-decoration: none;
 }
 
-/* Optional hover affordance */
-.logo-link:hover {
-    opacity: 0.9;
-}
-
-/* Logo image formatting */
+/* Logo image formatting – keep same feel as homepage */
 .logo-image { 
-    width: 140px;           
-    height: 115px;          
-    display: block;        /* removes anchor whitespace */
-    vertical-align: middle;
-    cursor: pointer;       /* visual affordance */
+    display: block;
+    max-width: 140px;      /* desktop size similar to homepage */
+    height: auto;          /* keep original aspect ratio */
+    margin: 0 auto;
+    cursor: pointer;
 }
 
 /* Mobile Responsive */
 @media (max-width: 900px) {
     .site-header { 
-        padding: 0.75rem 1rem; 
+        padding: 1rem 1rem; 
     }
 
     .logo-image { 
-        width: 100px;       
-        height: auto;       
+        max-width: 120px;   /* slightly smaller on mobile */
+        height: auto;
     }
 }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -565,13 +560,15 @@
 </head>
 <body>
 <header class="site-header">
-    <a href="https://austinapartments.com" class="logo-link" aria-label="Go to homepage">
-        <img 
-            src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png" 
-            alt="Austin Apartments Team"
-            class="logo-image"
-        >
-    </a>
+  <a href="https://austinapartments.com/" class="logo-link">
+    <img
+      src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png"
+      alt="Austin Apartments for Rent"
+      class="logo-image"
+      width="140"
+      height="115"
+    >
+  </a>
 </header>
         <div class="filter-bar">
         <div class="filter-grid">
