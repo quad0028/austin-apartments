@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,7 +122,7 @@
         }
         
         .header-logo img {
-            height: 80px;
+            height: 115px;
             width: auto;
             display: block;
             max-width: 100%;
@@ -206,8 +205,6 @@
         .property-card { background: var(--white); border-radius: 12px; padding: 1.15rem; margin-bottom: 0.9rem; border: 2px solid #e5e7eb; cursor: pointer; transition: all 0.3s; position: relative; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes refreshFade { 0% { opacity: 0.3; transform: scale(0.98); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .properties-list.refreshing { animation: refreshFade 0.3s ease-out; }
         .property-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.12); transform: translateY(-2px); }
         
         .property-card.rank-1 { background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border: 3px solid var(--teal); box-shadow: 0 8px 30px rgba(0,131,155,0.25); padding-top: 2.4rem; }
@@ -273,9 +270,9 @@
         .year-info { display: inline-block; padding: 0.25rem 0.45rem; background: #f3f4f6; border-radius: 4px; font-size: 0.68rem; color: var(--gray); margin-bottom: 0.4rem; }
         .specials-tag { display: inline-block; background: linear-gradient(135deg, var(--gold) 0%, #e6c55a 100%); color: #5c4a1f; padding: 0.3rem 0.55rem; border-radius: 6px; font-size: 0.68rem; font-weight: 600; margin-bottom: 0.6rem; }
         
-        .discount-circle { width: 81px; height: 81px; border-radius: 50%; background: linear-gradient(135deg, var(--teal) 0%, #00a3c4 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--white); flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,131,155,0.3); border: 3px solid var(--white); position: relative; top: 6px; margin-right: -19px; }
-        .rank-1 .discount-circle { width: 94px; height: 94px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 15px rgba(203,45,111,0.4); }
-        .rank-2 .discount-circle { width: 88px; height: 88px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
+        .discount-circle { width: 97px; height: 97px; border-radius: 50%; background: linear-gradient(135deg, var(--teal) 0%, #00a3c4 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--white); flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,131,155,0.3); border: 3px solid var(--white); position: relative; top: 6px; margin-right: -19px; }
+        .rank-1 .discount-circle { width: 113px; height: 113px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 15px rgba(203,45,111,0.4); }
+        .rank-2 .discount-circle { width: 106px; height: 106px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
         .rank-3 .discount-circle { background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 15px rgba(203,45,111,0.3); }
         .rank-3 .discount-circle .discount-percent, .rank-3 .discount-circle .discount-label { color: var(--white); }
         .discount-percent { font-size: 1.3rem; font-weight: 800; line-height: 1; }
@@ -506,7 +503,7 @@
             }
             
             .header-logo img {
-                height: 70px;
+                height: 101px;
             }
             
             .top-nav { padding: 0.6rem 1rem; }
@@ -581,8 +578,8 @@
             .comparison-bar span { font-size: 0.85rem; }
             .comparison-bar button { padding: 0.55rem 1.1rem; font-size: 0.8rem; }
             .discount-circle { width: 69px; height: 69px; }
-            .rank-1 .discount-circle { width: 81px; height: 81px; }
-        .rank-2 .discount-circle { width: 88px; height: 88px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
+            .rank-1 .discount-circle { width: 97px; height: 97px; }
+        .rank-2 .discount-circle { width: 106px; height: 106px; background: linear-gradient(135deg, var(--pink) 0%, #e84a8a 100%); box-shadow: 0 4px 12px rgba(203,45,111,0.35); }
             .discount-percent { font-size: 1.1rem; }
             .rank-1 .discount-percent { font-size: 1.3rem; }
             .card-actions { flex-direction: column; }
@@ -594,7 +591,7 @@
             }
             
             .header-logo img {
-                height: 60px;
+                height: 86px;
             }
             
             /* Mobile Area Info Panel - Smaller, more compact */
@@ -808,41 +805,13 @@
             }
             
             /* Compare Top 5 Sticky Button - Mobile */
-            .compare-top-5-sticky {
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 9998;
-                box-shadow: 0 8px 24px rgba(0,131,155,0.4);
-                animation: gentlePulse 3s ease-in-out infinite;
-            }
             
             /* Shimmer Button Animation */
-            .shimmer-button {
-                position: relative;
-                overflow: hidden;
-            }
             
-            .shimmer-button::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-                animation: shimmer 3s infinite;
-            }
             
-            @keyframes shimmer {
-                0% { left: -100%; }
-                50%, 100% { left: 100%; }
-            }
             
             /* Properties list padding for sticky button */
             .properties-list {
-                padding-bottom: 90px;
             }
             
             /* CRITICAL: Force display properties on mobile */
@@ -866,57 +835,12 @@
             }
         }
             /* Sticky Compare Button on Mobile */
-            .compare-top-5-sticky {
-                display: none;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 998;
-                background: linear-gradient(135deg, #cb2d6f 0%, #e84a8a 100%);
-                padding: 0.9rem 1rem;
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.25);
-                border: none;
-                border-top: 3px solid #1a1a1a;
-                cursor: pointer;
-                color: white;
-                font-family: inherit;
-                width: 100%;
-                text-align: center;
-                overflow: hidden;
-            }
             
-            .compare-top-5-sticky.show {
-                display: block;
-            }
             
             /* Metallic Shimmer Effect for Premium Button */
-            .shimmer-button {
-                position: relative;
-                overflow: hidden;
-            }
             
-            .shimmer-button::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, 
-                    transparent 0%, 
-                    rgba(255, 255, 255, 0.1) 25%,
-                    rgba(255, 182, 255, 0.4) 40%,
-                    rgba(255, 255, 255, 0.8) 50%, 
-                    rgba(255, 182, 255, 0.4) 60%,
-                    rgba(255, 255, 255, 0.1) 75%,
-                    transparent 100%);
-                animation: shimmer 3s infinite;
-                pointer-events: none;
-            }
             
             .properties-list {
-                padding-bottom: 90px; /* Space for sticky button */
             }
             
             /* CRITICAL FIX: Force Mobile Display - Ensure properties show */
@@ -953,11 +877,6 @@
             }
             
             /* Ensure compare button is visible */
-            .shimmer-button {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
         }
 
         /* iOS/Android Touch Optimizations */
@@ -1126,7 +1045,7 @@
     <header class="site-header">
         <div class="header-logo">
             <a href="https://austinapartments.com" title="Austin Apartments Team">
-                <img src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png" alt="Austin Apartments Team" width="400" height="80">
+                <img src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png" alt="Austin Apartments Team" width="575" height="115">
             </a>
         </div>
     </header>
@@ -1146,12 +1065,8 @@
         <div class="filter-grid">
             
             <div class="filter-group">
-                <label class="filter-label">Property Type</label>
-                <select class="filter-select" id="propertyTypeSelect" onchange="switchPropertyType(this.value)">
-                    <option value="market-rate">Market Rate</option>
-                    <option value="tax-credit">Income Restricted</option>
-                </select>
-                <div class="property-type-info-small" id="propertyTypeInfo"></div>
+                <label class="filter-label">Sort By</label>
+                <select class="filter-select" id="sortSelect" onchange="applyFilters()"><option value="deals">&#x1F3C6; Best Deals</option><option value="discount">&#x1F4B0; Highest % Off</option><option value="price">&#x1F4B5; Lowest Price</option><option value="rating">&#x2B50; Highest Rated</option></select>
             </div>
             
             <div class="filter-group">
@@ -1171,7 +1086,7 @@
                 <label class="filter-label">Property Class</label>
                 <select class="filter-select" id="classSelect" onchange="applyFilters()">
                     <option value="">All Classes</option>
-                    <option value="NEW">âœ¨ Brand New (Last 3 years)</option>
+                    <option value="NEW">&#x1F3C6; Brand New (Last 3 years)</option>
                     <option value="A">Class A (0-15 yrs)</option>
                     <option value="B">Class B (15-30 yrs)</option>
                     <option value="C">Class C (30+ yrs)</option>
@@ -1190,8 +1105,12 @@
                 <select class="filter-select" id="leaseSelect" onchange="applyFilters()"><option value="">Any</option><option value="12-14">12-14 months</option><option value="15-18">15-18 months</option></select>
             </div>
             <div class="filter-group">
-                <label class="filter-label">Sort By</label>
-                <select class="filter-select" id="sortSelect" onchange="applyFilters()"><option value="deals">&#x1F3C6; Best Deals</option><option value="discount">&#x1F4AF; Highest % Off</option><option value="price">&#x1F4B0; Lowest Price</option><option value="rating">&#x2B50; Highest Rated</option></select>
+                <label class="filter-label">Property Type</label>
+                <select class="filter-select" id="propertyTypeSelect" onchange="switchPropertyType(this.value)">
+                    <option value="market-rate">Market Rate</option>
+                    <option value="tax-credit">Income Restricted</option>
+                </select>
+                <div class="property-type-info-small" id="propertyTypeInfo"></div>
             </div>
 
         </div>
@@ -1257,12 +1176,6 @@
         <button onclick="openComparisonModal()">Compare & Get Details</button>
         <button class="btn-clear" onclick="clearComparison()">Clear</button>
     </div>
-
-    <!-- Sticky Compare Button for Mobile -->
-    <button class="compare-top-5-sticky shimmer-button" id="stickyCompareBtn" onclick="compareTop5()">
-        <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">âš¡ Get My Top 5 Matches</div>
-        <div style="font-size: 0.78rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
-    </button>
 
     <button class="mobile-map-btn" id="mobileMapBtn" onclick="openMobileMap()">&#x1F4CD; Filter on Map</button>
 
@@ -1627,7 +1540,7 @@
         async function loadAreaProperties(areaName) {
             // Check if already loaded (cache hit)
             if (areaPropertiesCache[areaName]) {
-                console.log(`âœ&hellip; ${areaName}: Using cached properties (${areaPropertiesCache[areaName].length} properties)`);
+                console.log(`&#x2705; ${areaName}: Using cached properties (${areaPropertiesCache[areaName].length} properties)`);
                 return areaPropertiesCache[areaName];
             }
             
@@ -1779,7 +1692,7 @@
                     // Add to global properties array
                     properties.push(...validProperties);
                     
-                    console.log(`âœ&hellip; ${areaName}: Loaded ${validProperties.length} properties`);
+                    console.log(`&#x2705; ${areaName}: Loaded ${validProperties.length} properties`);
                     
                     loadingAreas.delete(areaName);
                     hideAreaLoadingSpinner();
@@ -1856,13 +1769,13 @@
                         // Check Column K first (manual override)
                         if (prop.leaseTermOverride && prop.leaseTermOverride > 0) {
                             leaseTermMonths = prop.leaseTermOverride;
-                            console.log(`âœ&hellip; ${prop.name}: Using Column K lease term override: ${leaseTermMonths} months`);
+                            console.log(`&#x2705; ${prop.name}: Using Column K lease term override: ${leaseTermMonths} months`);
                         } else {
                             // Parse from specials text (original behavior)
                             const leaseMatch = prop.specials.match(/(\d+)\s*mo\s*lease/i);
                             if (leaseMatch) {
                                 leaseTermMonths = parseInt(leaseMatch[1]);
-                                console.log(`ðŸ“‹ ${prop.name}: Parsed lease term from specials: ${leaseTermMonths} months`);
+                                console.log(`&#x1F4CB; ${prop.name}: Parsed lease term from specials: ${leaseTermMonths} months`);
                             } else {
                                 console.log(`&#x26A0;&#xFE0F; ${prop.name}: No lease term found, using default: ${leaseTermMonths} months`);
                             }
@@ -2032,7 +1945,7 @@
                     if (beforeValidation !== afterValidation) {
                         console.warn(`&#x26A0;&#xFE0F; Filtered out ${beforeValidation - afterValidation} invalid properties`);
                     }
-                    console.log(`âœ&hellip; ${properties.length} valid properties loaded`);
+                    console.log(`&#x2705; ${properties.length} valid properties loaded`);
                     
                     // Calculate property classes
                     properties.forEach(p => p.calculatedClass = getPropertyClass(p));
@@ -2595,8 +2508,9 @@
         }
 
         function hasUserSubmittedForm() {
-            // Check if user has submitted form (for analytics/tracking only)
-            // Property names are always visible - form is just for emailing results
+            // Check if user has submitted the lead capture form
+            // Returns TRUE only after form submission - used to unlock hidden property names
+            // DEFAULT: false (names are HIDDEN until user submits form - Hotwire model)
             return localStorage.getItem('formSubmitted') === 'true';
         }
 
@@ -2670,7 +2584,7 @@
                 container.innerHTML = `
                     <div class="select-areas-prompt">
                         <h3>&#x1F44B; Let's Find Your Perfect Place!</h3>
-                        <p style="line-height: 1.6; margin-bottom: 0.5rem;">Just follow these 3 easy steps "” start from the top and work your way down:</p>
+                        <p style="line-height: 1.6; margin-bottom: 0.5rem;">Just follow these 3 easy steps &mdash; start from the top and work your way down:</p>
                         <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
                             <strong><span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#00839b;color:white;border-radius:50%;font-weight:bold;font-size:13px;margin-right:4px;">1</span> Choose Your Property Type</strong><br>
                             Select "Market Rate" (open to all applicants) or "Tax Credit" if you qualify under the income limits shown on the map.
@@ -2683,7 +2597,7 @@
                             <strong><span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#00839b;color:white;border-radius:50%;font-weight:bold;font-size:13px;margin-right:4px;">3</span> Set Your Filters</strong><br>
                             Choose your bedrooms, budget, property class, and amenities to narrow down the best matches for you.
                         </p>
-                        <p style="margin-top: 0.8rem; font-weight: 600; color: var(--teal);">&#x1F449; Start by clicking an area on the map "” your matches will appear instantly!</p>
+                        <p style="margin-top: 0.8rem; font-weight: 600; color: var(--teal);">&#x1F449; Start by clicking an area on the map &mdash; your matches will appear instantly!</p>
                     </div>
                 `;
                 return;
@@ -2739,7 +2653,7 @@
             if (filteredProperties.length > 0) {
                 compareTop5Button = `
                     <button onclick="compareTop5()" class="shimmer-button" style="width: 100%; background: linear-gradient(135deg, #cb2d6f 0%, #e84a8a 100%); color: white; padding: 1.2rem; border: 2px solid #1a1a1a; border-radius: 12px; margin-bottom: 1.8rem; text-align: center; cursor: pointer; box-shadow: 0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2); font-family: inherit; transition: all 0.3s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(203,45,111,0.6), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';">
-                        <div style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">âš¡ Get My Top ${Math.min(5, filteredProperties.length)} ${filteredProperties.length === 1 ? 'Match' : 'Matches'}</div>
+                        <div style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">&#x2713; Get My Top ${Math.min(5, filteredProperties.length)} ${filteredProperties.length === 1 ? 'Match' : 'Matches'}</div>
                         <div style="font-size: 0.88rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
                     </button>
                 `;
@@ -2830,7 +2744,7 @@
                 // Hide ALL names until form submission (Hotwire-style lead capture)
                 if (!hasSubmittedForm) {
                     // BEFORE form submission: Hide ALL property names
-                    propertyTitle = `ðŸ”’ Hidden Deal - Class ${p.calculatedClass}`;
+                    propertyTitle = `&#x1F512; Hidden Deal - Class ${p.calculatedClass}`;
                     displayLocation = p.area; // Show only area, NOT address
                 } else {
                     // AFTER form submission: Show actual names and addresses
@@ -2953,9 +2867,9 @@
             const displayNames = names.map(name => {
                 if (hasSubmitted) return name;
                 const prop = properties.find(p => p.name === name);
-                return prop ? `ðŸ”’ Hidden Deal - Class ${prop.calculatedClass}` : 'ðŸ”’ Hidden Property';
+                return prop ? `&#x1F512; Hidden Deal - Class ${prop.calculatedClass}` : '&#x1F512; Hidden Property';
             });
-            document.getElementById('modalContent').innerHTML = `<div class="modal-header"><h2>&#x1F513; Unlock Hidden Property Details</h2><p>See exact names, addresses, and exclusive deals</p></div><div class="modal-body"><div class="selected-properties-preview"><h3>Selected Properties (${names.length})</h3>${displayNames.map(n => `<div class="selected-property-item">${n}</div>`).join('')}</div><div style="background:#fef2f2;border:2px solid#fecaca;border-radius:8px;padding:0.75rem;margin-bottom:1rem;font-size:0.8rem;color:#991b1b;"><strong>&#x26A0;&#xFE0F; Note:</strong> Pricing shown is estimated. Actual rent, discounts, and availability vary by unit and move-in date. A specialist will confirm exact pricing when they contact you.</div><form id="leadForm" onsubmit="handleFormSubmit(event)"><div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);padding:1rem;border-radius:8px;margin-bottom:1rem;border:2px solid var(--teal);"><h3 style="color:var(--teal);font-size:0.9rem;margin-bottom:0.75rem;text-align:center;">ðŸ“‹ Qualification Information</h3><div class="form-group"><label>Rental History *</label><select name="rentalHistory" required><option value="">Select...</option><option value="clean">âœ&hellip; Clean Record</option><option value="eviction">&#x26A0;&#xFE0F; Eviction</option><option value="debt">&#x26A0;&#xFE0F; Property Debt</option><option value="broken">&#x26A0;&#xFE0F; Broken Lease</option></select></div><div class="form-group"><label>Credit Score *</label><select name="creditScore" required><option value="">Select...</option><option value="excellent">âœ&hellip; Excellent (700+)</option><option value="good">âœ&hellip; Good (650-699)</option><option value="fair">âœ&hellip; Fair (575-649)</option><option value="improving">&#x26A0;&#xFE0F; Improving (Below 575)</option></select></div><div class="form-group"><label>Background Check *</label><select name="background" required><option value="">Select...</option><option value="perfect">âœ&hellip; Perfect</option><option value="misdemeanor">&#x26A0;&#xFE0F; Misdemeanor</option><option value="felony">&#x26A0;&#xFE0F; Felony</option></select></div></div><div class="form-group"><label>Full Name *</label><input type="text" name="name" required placeholder="John Doe"></div><div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="john@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(512) 555-1234"></div><div class="form-group"><label>Monthly Budget *</label><input type="text" name="budget" required placeholder="$1,500 - $2,000"></div><div class="form-group"><label>Move-in Date *</label><input type="date" name="moveInDate" required></div><div class="form-group"><label>Notes</label><textarea name="notes" placeholder="Any special requirements..."></textarea></div><div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button><button type="submit" class="btn-submit">&#x1F513; Unlock Details</button></div></form></div>`;
+            document.getElementById('modalContent').innerHTML = `<div class="modal-header"><h2>&#x1F513; Unlock Hidden Property Details</h2><p>See exact names, addresses, and exclusive deals</p></div><div class="modal-body"><div class="selected-properties-preview"><h3>Selected Properties (${names.length})</h3>${displayNames.map(n => `<div class="selected-property-item">${n}</div>`).join('')}</div><div style="background:#fef2f2;border:2px solid#fecaca;border-radius:8px;padding:0.75rem;margin-bottom:1rem;font-size:0.8rem;color:#991b1b;"><strong>&#x26A0;&#xFE0F; Note:</strong> Pricing shown is estimated. Actual rent, discounts, and availability vary by unit and move-in date. A specialist will confirm exact pricing when they contact you.</div><form id="leadForm" onsubmit="handleFormSubmit(event)"><div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);padding:1rem;border-radius:8px;margin-bottom:1rem;border:2px solid var(--teal);"><h3 style="color:var(--teal);font-size:0.9rem;margin-bottom:0.75rem;text-align:center;">&#x1F4CB; Qualification Information</h3><div class="form-group"><label>Rental History *</label><select name="rentalHistory" required><option value="">Select...</option><option value="clean">&#x2705; Clean Record</option><option value="eviction">&#x26A0;&#xFE0F; Eviction</option><option value="debt">&#x26A0;&#xFE0F; Property Debt</option><option value="broken">&#x26A0;&#xFE0F; Broken Lease</option></select></div><div class="form-group"><label>Credit Score *</label><select name="creditScore" required><option value="">Select...</option><option value="excellent">&#x2705; Excellent (700+)</option><option value="good">&#x2705; Good (650-699)</option><option value="fair">&#x2705; Fair (575-649)</option><option value="improving">&#x26A0;&#xFE0F; Improving (Below 575)</option></select></div><div class="form-group"><label>Background Check *</label><select name="background" required><option value="">Select...</option><option value="perfect">&#x2705; Perfect</option><option value="misdemeanor">&#x26A0;&#xFE0F; Misdemeanor</option><option value="felony">&#x26A0;&#xFE0F; Felony</option></select></div></div><div class="form-group"><label>Full Name *</label><input type="text" name="name" required placeholder="John Doe"></div><div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="john@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(512) 555-1234"></div><div class="form-group"><label>Monthly Budget *</label><input type="text" name="budget" required placeholder="$1,500 - $2,000"></div><div class="form-group"><label>Move-in Date *</label><input type="date" name="moveInDate" required></div><div class="form-group"><label>Notes</label><textarea name="notes" placeholder="Any special requirements..."></textarea></div><div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button><button type="submit" class="btn-submit">&#x1F513; Unlock Details</button></div></form></div>`;
             document.getElementById('modalOverlay').classList.add('active');
         }
         function openComparisonModal() { openModal(Array.from(comparedProperties), null); }
@@ -2991,7 +2905,7 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    console.log('âœ&hellip; Form submitted to Formspree successfully');
+                    console.log('&#x2705; Form submitted to Formspree successfully');
                 } else {
                     console.error('âŒ Formspree submission error');
                 }
@@ -3304,7 +3218,7 @@
                     console.log('ðŸ† TOP 5 BEST DEALS (Percentage-Based Tier System):');
                     const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
                     if (hasPriceFilter) {
-                        console.log('âš¡ BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
+                        console.log('&#x2713; BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
                     }
                     filteredProperties.slice(0, 5).forEach((p, i) => {
                         console.log(`${i+1}. ${p.name} - Score: ${p.dealScore.toFixed(1)}`);
@@ -3366,7 +3280,7 @@
             initMap();
             renderProperties(); // Show welcome message immediately before data loads
             // ON-DEMAND LOADING: Properties load when user selects an area
-            console.log('âœ&hellip; Page loaded instantly! Properties will load when you select an area.');
+            console.log('&#x2705; Page loaded instantly! Properties will load when you select an area.');
         });
 
         document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
