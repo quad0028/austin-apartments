@@ -1,9 +1,92 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Austin Apartments - Find Your Perfect Apartment | Free Locator Service</title>
+    <meta name="title" content="Austin Apartments - Find Your Perfect Apartment | Free Locator Service">
+    <meta name="description" content="Find exclusive apartment deals in Austin, Round Rock, Pflugerville & more. Compare 1000+ properties with hidden discounts up to 40% off. 100% free apartment locating service by local experts.">
+    <meta name="keywords" content="Austin apartments, apartment locator Austin, Austin rentals, apartments for rent Austin, cheap apartments Austin, Downtown Austin apartments, Domain apartments, Round Rock apartments, Pflugerville apartments, free apartment locator, apartment deals Austin">
+    <meta name="author" content="Austin Apartments Team - Ross Quade">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://search.austinapartments.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://search.austinapartments.com/">
+    <meta property="og:site_name" content="Austin Apartments Team">
+    <meta property="og:title" content="Austin Apartments - Find Your Perfect Apartment | Free Service">
+    <meta property="og:description" content="Compare 1000+ Austin apartments with exclusive deals and hidden discounts. Our free locator service helps you find the perfect apartment with up to 40% off rent.">
+    <meta property="og:image" content="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://search.austinapartments.com/">
+    <meta property="twitter:title" content="Austin Apartments - Find Your Perfect Apartment">
+    <meta property="twitter:description" content="Compare 1000+ Austin apartments with exclusive deals. Free locator service with up to 40% off rent.">
+    <meta property="twitter:image" content="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png">
+    
+    <!-- Contact & Business Info -->
+    <meta name="telephone" content="+1-512-943-6859">
+    <meta name="email" content="help@austinapartments.com">
+    <meta name="geo.region" content="US-TX">
+    <meta name="geo.placename" content="Austin">
+    <meta name="geo.position" content="30.267153;-97.743057">
+    <meta name="ICBM" content="30.267153, -97.743057">
+    
+    <!-- Additional SEO -->
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="rating" content="General">
+    <link rel="alternate" hreflang="en-us" href="https://search.austinapartments.com/">
+    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Austin Apartments - Exclusive Hidden Deals</title>
+    
+    <!-- iOS Optimizations -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ATX Apts">
+    <meta name="format-detection" content="telephone=yes">
+    
+    <!-- Android Optimizations -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#00839b">
+    
+    <!-- Favicons -->
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="dns-prefetch" href="https://cdn.carrot.com">
+    <link rel="dns-prefetch" href="https://formspree.io">
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="dns-prefetch" href="https://cdn.carrot.com">
+    <link rel="dns-prefetch" href="https://formspree.io">
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#00839b">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+
+    
+    <!-- Disable auto-zoom on input focus (iOS) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,6 +100,43 @@
             touch-action: manipulation;
         }
         
+        /* Main Header - Centered Logo Only */
+        .site-header {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-logo a {
+            display: block;
+            text-decoration: none;
+        }
+        
+        .header-logo img {
+            height: 80px;
+            width: auto;
+            display: block;
+            max-width: 100%;
+        }
+        
+        .header-phone {
+            display: none;
+        }
+        
+        .phone-icon {
+            display: none;
+        }
+        
         .top-nav { background: var(--dark); color: var(--white); padding: 0.75rem 2rem; border-bottom: 3px solid var(--teal); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
         .logo span { color: var(--teal); }
@@ -24,8 +144,8 @@
         .nav-links a { color: var(--white); text-decoration: none; }
         .nav-links a:hover { color: var(--teal); }
         
-        .filter-bar { background: var(--white); padding: 1rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,131,155,0.1); }
-        .filter-grid { display: grid; grid-template-columns: 1fr 1.2fr 0.9fr 1fr 1fr 0.8fr 0.9fr 1fr; gap: 0.6rem; }
+        .filter-bar { background: var(--white); padding: 1rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 100; border-bottom: 1px solid rgba(0,131,155,0.1); }
+        .filter-grid { display: grid; grid-template-columns: 1fr 1.1fr 0.95fr 1fr 1fr 0.85fr 0.95fr 1fr; gap: 0.6rem; }
         .filter-grid-row-2 { display: none; /* Hidden - questions moved to modal */ }
         
         /* Responsive breakpoints for single-row layout */
@@ -34,7 +154,7 @@
         }
         .filter-group { display: flex; flex-direction: column; gap: 0.3rem; }
         .filter-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray); }
-        .filter-input, .filter-select { padding: 0.55rem 0.7rem; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.85rem; background: var(--white); }
+        .filter-input, .filter-select { padding: 0.55rem 0.6rem; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.8rem; background: var(--white); }
         .filter-input:focus, .filter-select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,131,155,0.1); }
         
         .selected-areas-display { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; min-height: 24px; }
@@ -201,7 +321,7 @@
             background-color: #047857 !important;
         }
         .btn-compare.active::before {
-            content: '✓';
+            content: 'âœ“';
             display: inline-block;
             margin-right: 5px;
             font-size: 1.1em;
@@ -277,7 +397,118 @@
         .area-tooltip ul { list-style-type: disc; margin: 0.4em 0 0.4em 0; padding-left: 1.2em; }
         .area-tooltip li { margin-bottom: 0.2em; line-height: 1.4; }
         
+        /* Fixed Area Info Panel - Top Right Corner of Map */
+        .map-area-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border: 2px solid var(--teal);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 280px;
+            display: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .map-area-info.visible {
+            display: block;
+        }
+        
+        .map-area-info h4 {
+            margin: 0 0 8px 0;
+            color: var(--teal);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .map-area-info .info-landmarks {
+            font-size: 0.85rem;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .map-area-info ul {
+            list-style-type: disc;
+            margin: 0;
+            padding-left: 1.2rem;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        
+        .map-area-info li {
+            margin-bottom: 4px;
+        }
+        
+        .map-area-info .info-action {
+            font-size: 0.85rem;
+            font-style: italic;
+            font-weight: 600;
+            margin-top: 8px;
+            color: var(--teal);
+        }
+        
+        .map-area-info .close-info {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 1;
+        }
+        
+        .map-area-info .close-info:hover {
+            color: var(--teal);
+        }
+        
+        /* Mobile Filter Controls */
+        .mobile-filter-controls {
+            display: none;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .mobile-filter-toggle, .mobile-map-toggle {
+            background: var(--teal);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: calc(50% - 0.5rem);
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,131,155,0.3);
+            display: flex;
+        }
+        
+        .mobile-filter-toggle.active {
+            background: var(--pink);
+        }
+
         @media (max-width: 900px) {
+            /* Mobile Header - Centered Logo */
+            .site-header {
+                padding: 1.25rem 1rem;
+            }
+            
+            .header-logo img {
+                height: 70px;
+            }
+            
             .top-nav { padding: 0.6rem 1rem; }
             .nav-links { display: none; }
             .filter-bar { 
@@ -286,7 +517,26 @@
                 padding-left: max(1rem, env(safe-area-inset-left));
                 padding-right: max(1rem, env(safe-area-inset-right));
             }
-            .filter-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            
+            /* Show mobile filter controls */
+            .mobile-filter-controls {
+                display: flex !important;
+            }
+            
+            /* Hide filter grid by default on mobile */
+            .filter-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 0.5rem;
+                display: none;
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                border-top: 2px solid var(--teal);
+            }
+            
+            /* Show when expanded */
+            .filter-grid.expanded {
+                display: grid !important;
+            }
             .filter-grid-row-2 { display: none; }
             
             /* iOS zoom prevention - 16px minimum font size */
@@ -338,6 +588,49 @@
             .card-actions { flex-direction: column; }
         }
         @media (max-width: 480px) {
+            /* Very Small Screen Header - Centered Logo */
+            .site-header {
+                padding: 1rem 0.8rem;
+            }
+            
+            .header-logo img {
+                height: 60px;
+            }
+            
+            /* Mobile Area Info Panel - Smaller, more compact */
+            .map-area-info {
+                top: 5px;
+                right: 5px;
+                left: 5px;
+                max-width: none;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .map-area-info h4 {
+                font-size: 0.95rem;
+                margin-bottom: 6px;
+            }
+            
+            .map-area-info .info-landmarks {
+                font-size: 0.8rem;
+                margin-bottom: 6px;
+            }
+            
+            .map-area-info ul {
+                font-size: 0.82rem;
+                padding-left: 1rem;
+            }
+            
+            .map-area-info li {
+                margin-bottom: 3px;
+            }
+            
+            .map-area-info .info-action {
+                font-size: 0.8rem;
+                margin-top: 6px;
+            }
+            
             .filter-grid { grid-template-columns: 1fr; }
             .filter-grid-row-2 { display: none; }
             
@@ -413,7 +706,7 @@
             border-color: var(--teal);
         }
         .compare-checkbox:checked::after {
-            content: '✓';
+            content: 'âœ“';
             position: absolute;
             top: -2px;
             left: 2px;
@@ -438,7 +731,7 @@
             line-height: 1.5;
         }
         .help-box ul li::before {
-            content: '✓';
+            content: 'âœ“';
             position: absolute;
             left: 0;
             color: #059669;
@@ -666,12 +959,190 @@
                 opacity: 1 !important;
             }
         }
+
+        /* iOS/Android Touch Optimizations */
+        * {
+            -webkit-tap-highlight-color: rgba(0,131,155,0.2);
+            -webkit-touch-callout: none;
+        }
+        
+        /* Smooth scrolling for all devices */
+        html {
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch;
+        }
+        
+        /* Prevent zoom on double-tap (iOS) */
+        button, a, input, select, textarea {
+            touch-action: manipulation;
+        }
+        
+        /* Better tap targets (44px minimum for iOS) */
+        .filter-select, .filter-input, button, a {
+            min-height: 44px;
+        }
+        
+        /* iOS safe area support */
+        @supports (padding: max(0px)) {
+            .filter-bar {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+            
+            .comparison-bar {
+                padding-bottom: max(0.7rem, env(safe-area-inset-bottom));
+            }
+        }
         </style>
+
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": ["RealEstateAgent", "LocalBusiness"],
+        "@id": "https://austinapartments.com/#organization",
+        "name": "Austin Apartments Team",
+        "alternateName": "AustinApartments.com",
+        "url": "https://austinapartments.com",
+        "mainEntityOfPage": "https://austinapartments.com/",
+        "foundingDate": "2025",
+        "image": "https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png",
+            "width": 600,
+            "height": 200
+        },
+        "telephone": "+1-512-943-6859",
+        "email": "help@austinapartments.com",
+        "priceRange": "Free",
+        "description": "Austin Apartments Team helps renters find apartments in Austin and surrounding communities using local expertise, real-time data, and personalized guidance. Our apartment locating service is 100% free for renters.",
+        "founder": {
+            "@type": "Person",
+            "name": "Ross Quade",
+            "jobTitle": "Founder & Lead Apartment Locator"
+        },
+        "parentOrganization": {
+            "@type": "Organization",
+            "name": "Spirit Real Estate Group"
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Austin",
+            "addressRegion": "TX",
+            "postalCode": "78701",
+            "addressCountry": "US"
+        },
+        "areaServed": [
+            {"@type": "City", "name": "Austin, TX"},
+            {"@type": "City", "name": "Round Rock, TX"},
+            {"@type": "City", "name": "Pflugerville, TX"},
+            {"@type": "City", "name": "Cedar Park, TX"},
+            {"@type": "City", "name": "Leander, TX"},
+            {"@type": "City", "name": "Georgetown, TX"},
+            {"@type": "City", "name": "Hutto, TX"},
+            {"@type": "City", "name": "Kyle, TX"},
+            {"@type": "City", "name": "Buda, TX"},
+            {"@type": "City", "name": "Manor, TX"}
+        ],
+        "sameAs": [
+            "https://www.facebook.com/austinapartmentsteam",
+            "https://www.instagram.com/austinapartmentsteam"
+        ],
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://search.austinapartments.com/?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://search.austinapartments.com/#website",
+        "name": "Austin Apartment Search Tool",
+        "url": "https://search.austinapartments.com/",
+        "publisher": {
+            "@id": "https://austinapartments.com/#organization"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://search.austinapartments.com/?query={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Apartment Locator Service",
+        "provider": {
+            "@id": "https://austinapartments.com/#organization"
+        },
+        "areaServed": {
+            "@type": "City",
+            "name": "Austin",
+            "containedInPlace": {
+                "@type": "State",
+                "name": "Texas"
+            }
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Austin Apartment Listings",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Apartment",
+                        "name": "Luxury Apartments Downtown Austin"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Apartment",
+                        "name": "Affordable Apartments Round Rock"
+                    }
+                }
+            ]
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Free apartment locator service for renters"
+        }
+    }
+    </script>
 </head>
 <body>
 
+    <!-- Main Header - Centered Logo -->
+    <header class="site-header">
+        <div class="header-logo">
+            <a href="https://austinapartments.com" title="Austin Apartments Team">
+                <img src="https://cdn.carrot.com/uploads/sites/81937/2025/05/Austin-Apartments-Team-Logo.png" alt="Austin Apartments Team" width="400" height="80">
+            </a>
+        </div>
+    </header>
+
 
         <div class="filter-bar">
+        <!-- Mobile Filter Controls -->
+        <div class="mobile-filter-controls">
+            <button class="mobile-filter-toggle" id="mobileFilterToggle" onclick="toggleMobileFilters()">
+                &#128269; Filters
+            </button>
+            <button class="mobile-map-toggle" onclick="openMobileMap()">
+                &#128205; Map
+            </button>
+        </div>
+        
         <div class="filter-grid">
             
             <div class="filter-group">
@@ -693,14 +1164,14 @@
                 <select class="filter-select" id="bedroomsSelect" onchange="applyFilters()"><option value="">Any</option><option value="Studio">Studio</option><option value="1">1 BR</option><option value="2">2 BR</option><option value="3">3 BR</option></select>
             </div>
             <div class="filter-group">
-                <label class="filter-label">💰 Price Range</label>
+                <label class="filter-label">&#x1F4B0; Price Range</label>
                 <select class="filter-select" id="priceSelect" onchange="applyFilters()"><option value="">All Prices</option><option value="750-1000">$750 - $1,000</option><option value="1000-1250">$1,000 - $1,250</option><option value="1250-1500">$1,250 - $1,500</option><option value="1500-1750">$1,500 - $1,750</option><option value="1750-2000">$1,750 - $2,000</option><option value="2000-2500">$2,000 - $2,500</option><option value="2500-3000">$2,500 - $3,000</option><option value="3000-5000">$3,000 - $5,000</option><option value="5000-9999">$5,000 - $9,999</option></select>
             </div>
             <div class="filter-group">
                 <label class="filter-label">Property Class</label>
                 <select class="filter-select" id="classSelect" onchange="applyFilters()">
                     <option value="">All Classes</option>
-                    <option value="NEW">✨ Brand New (Last 3 years)</option>
+                    <option value="NEW">âœ¨ Brand New (Last 3 years)</option>
                     <option value="A">Class A (0-15 yrs)</option>
                     <option value="B">Class B (15-30 yrs)</option>
                     <option value="C">Class C (30+ yrs)</option>
@@ -741,7 +1212,7 @@
     </div>
 
     <div class="main-container">
-        <div class="listings-panel"><div class="properties-list" id="propertiesList"></div><div class="pricing-disclaimer" id="pricingDisclaimer"><strong>⚠️ Pricing Disclaimer:</strong> All pricing shown is <strong>estimated</strong> and for comparison purposes only. Actual rent varies by unit, floor plan, availability, move-in date, and lease terms. Discounts and specials apply only to qualifying units and bedroom types as specified by each property. Contact the property directly for exact, current pricing and availability. We are not responsible for pricing changes or discrepancies.</div></div>
+        <div class="listings-panel"><div class="properties-list" id="propertiesList"></div><div class="pricing-disclaimer" id="pricingDisclaimer"><strong>&#x26A0;&#xFE0F; Pricing Disclaimer:</strong> All pricing shown is <strong>estimated</strong> and for comparison purposes only. Actual rent varies by unit, floor plan, availability, move-in date, and lease terms. Discounts and specials apply only to qualifying units and bedroom types as specified by each property. Contact the property directly for exact, current pricing and availability. We are not responsible for pricing changes or discrepancies.</div></div>
         <div class="map-panel">
             <!-- Income Limits Banner (top of map, only shows when Income Restricted) -->
             <div id="mapIncomeBanner" style="display: none; position: absolute; top: 12px; left: 12px; right: 12px; z-index: 500; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); border: 1px solid rgba(212,178,84,0.3); border-radius: 8px; padding: 0.6rem 1rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);">
@@ -752,23 +1223,32 @@
                     <!-- Line 1: 1, 2, 3 renters -->
                     <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: center; margin-bottom: 0.3rem;">
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">1</span> renter: <span style="font-weight: 600; color: #2d2d2d;">$57,800</span></span>
-                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">&bull;</span>
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">2</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$66,100</span></span>
-                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">&bull;</span>
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">3</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$74,400</span></span>
                     </div>
                     
                     <!-- Line 2: 4, 5, 6 renters -->
                     <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; justify-content: center;">
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">4</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$82,600</span></span>
-                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">&bull;</span>
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">5</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$89,300</span></span>
-                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">•</span>
+                        <span style="color: rgba(212,178,84,0.3); font-size: 0.6rem;">&bull;</span>
                         <span style="font-size: 0.68rem; color: #4a4a4a; font-weight: 500;"><span style="font-weight: 600; color: var(--gold);">6</span> renters: <span style="font-weight: 600; color: #2d2d2d;">$95,900</span></span>
                     </div>
                 </div>
             </div>
             <div id="map"></div>
+            
+            <!-- Area Info Panel - Top Right Corner -->
+            <div class="map-area-info" id="mapAreaInfo">
+                <button class="close-info" onclick="hideAreaInfo()" title="Close">&times;</button>
+                <h4 id="areaInfoTitle"></h4>
+                <div class="info-landmarks" id="areaInfoLandmarks"></div>
+                <ul id="areaInfoBullets"></ul>
+                <div class="info-action" id="areaInfoAction"></div>
+            </div>
         </div>
     </div>
 
@@ -780,7 +1260,7 @@
 
     <!-- Sticky Compare Button for Mobile -->
     <button class="compare-top-5-sticky shimmer-button" id="stickyCompareBtn" onclick="compareTop5()">
-        <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">⚡ Get My Top 5 Matches</div>
+        <div style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.25rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">âš¡ Get My Top 5 Matches</div>
         <div style="font-size: 0.78rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
     </button>
 
@@ -854,7 +1334,7 @@
         // Area descriptions for dropdown (landmarks) and map tooltips (bullets)
         const areaDescriptions = {
             'Downtown': {
-                landmarks: 'Rainey • 2nd Street • Lady Bird Lake',
+                landmarks: 'Rainey - 2nd St. - Lady Bird',
                 bullets: [
                     'High-rise living',
                     'Close to offices, nightlife, dining, and the lake',
@@ -863,7 +1343,7 @@
                 ]
             },
             'Central': {
-                landmarks: 'UT • Hyde Park • North Loop',
+                landmarks: 'UT - Hyde Park',
                 bullets: [
                     'Classic central neighborhoods near UT',
                     'Tree-lined streets',
@@ -872,7 +1352,7 @@
                 ]
             },
             'Arboretum': {
-                landmarks: 'Domain • Tech Corridor',
+                landmarks: 'Domain - Tech Corridor',
                 bullets: [
                     'North Austin shopping and tech hub',
                     'Near The Domain and major employers',
@@ -881,7 +1361,7 @@
                 ]
             },
             'Far West': {
-                landmarks: 'Northwest Hills • Far West Blvd',
+                landmarks: 'NW Hills - Far West',
                 bullets: [
                     'Hillside residential area',
                     'Established condos and apartment communities',
@@ -890,7 +1370,7 @@
                 ]
             },
             'West': {
-                landmarks: 'Westlake • Lake Austin • 360 Corridor',
+                landmarks: 'Westlake - Lake Austin',
                 bullets: [
                     'Scenic Hill Country surroundings',
                     'Upscale and luxury communities',
@@ -899,7 +1379,7 @@
                 ]
             },
             'East': {
-                landmarks: 'East 6th • MLK • Springdale',
+                landmarks: 'East 6th - MLK',
                 bullets: [
                     'Trendy, artsy neighborhoods',
                     'Mix of new builds and established props',
@@ -908,7 +1388,7 @@
                 ]
             },
             'Far East': {
-                landmarks: 'Tesla • Airport • Del Valle',
+                landmarks: 'Tesla - Airport',
                 bullets: [
                     'Developing east Austin growth area',
                     'Close to Tesla Giga Texas and ABIA',
@@ -917,7 +1397,7 @@
                 ]
             },
             'South': {
-                landmarks: 'SoCo • SoLa • St. Elmo',
+                landmarks: 'SoCo - SoLa',
                 bullets: [
                     'Walkable entertainment districts',
                     'Popular dining and shopping',
@@ -926,7 +1406,7 @@
                 ]
             },
             'North': {
-                landmarks: 'Parmer • Tech Ridge • Walnut Creek',
+                landmarks: 'Parmer - Tech Ridge',
                 bullets: [
                     'Affordable North Austin communities',
                     'Near tech campuses and employers',
@@ -935,7 +1415,7 @@
                 ]
             },
             'Northeast': {
-                landmarks: 'Harris Branch • Samsung • Pflugerville edge',
+                landmarks: 'Harris Branch - Samsung',
                 bullets: [
                     'Fast-growing residential area',
                     'New construction communities',
@@ -944,7 +1424,7 @@
                 ]
             },
             'Northwest': {
-                landmarks: 'Anderson Mill • Lakeline • Cedar Park edge',
+                landmarks: 'Anderson Mill - Lakeline',
                 bullets: [
                     'Suburban living',
                     'Good school districts',
@@ -953,7 +1433,7 @@
                 ]
             },
             'Round Rock': {
-                landmarks: 'Dell • Old Town • 45 Toll',
+                landmarks: 'Dell - Old Town',
                 bullets: [
                     'Family-friendly suburb',
                     'Strong schools',
@@ -962,7 +1442,7 @@
                 ]
             },
             'Pflugerville': {
-                landmarks: 'Lake Pflugerville • SH-130',
+                landmarks: 'Lake Pflugerville',
                 bullets: [
                     'Growing suburban area',
                     'Larger apartment layouts',
@@ -971,7 +1451,7 @@
                 ]
             },
             'Cedar Park': {
-                landmarks: 'Lakeline Mall • Brushy Creek',
+                landmarks: 'Lakeline - Brushy Creek',
                 bullets: [
                     'Established northern suburb',
                     'Parks and trails',
@@ -980,7 +1460,7 @@
                 ]
             },
             'Georgetown': {
-                landmarks: 'Historic Square • Wolf Ranch',
+                landmarks: 'Historic Square',
                 bullets: [
                     'Charming suburban feel',
                     'Historic town square area',
@@ -989,7 +1469,7 @@
                 ]
             },
             'Leander & Liberty Hill': {
-                landmarks: 'North Line • New Growth Areas',
+                landmarks: 'North Line',
                 bullets: [
                     'Rapid residential expansion',
                     'Brand-new apartment developments',
@@ -1034,7 +1514,7 @@
                 ]
             },
             'Southeast': {
-                landmarks: 'SE Riverside • Airport • McKinney Falls',
+                landmarks: 'SE Riverside - Airport',
                 bullets: [
                     'More affordable than central and west areas',
                     'Mix of older and newer communities',
@@ -1043,7 +1523,7 @@
                 ]
             },
             'Southwest': {
-                landmarks: 'Oak Hill • SW Parkway',
+                landmarks: 'Oak Hill',
                 bullets: [
                     'Suburban feel with quick city access',
                     'Newer master-planned communities',
@@ -1072,7 +1552,7 @@
         };
 
         // Pricing increments based on Austin market research (within same community)
-        // Studio â†’ 1BR: ~$200 avg | 1BR â†’ 2BR: ~$300 avg | 2BR â†’ 3BR: ~$400 avg
+        // Studio Ã¢" ' 1BR: ~$200 avg | 1BR Ã¢" ' 2BR: ~$300 avg | 2BR Ã¢" ' 3BR: ~$400 avg
         const BEDROOM_INCREMENTS = {
             'studio_to_1br': 200,
             '1br_to_2br': 300,
@@ -1147,13 +1627,13 @@
         async function loadAreaProperties(areaName) {
             // Check if already loaded (cache hit)
             if (areaPropertiesCache[areaName]) {
-                console.log(`✅ ${areaName}: Using cached properties (${areaPropertiesCache[areaName].length} properties)`);
+                console.log(`âœ&hellip; ${areaName}: Using cached properties (${areaPropertiesCache[areaName].length} properties)`);
                 return areaPropertiesCache[areaName];
             }
             
             // Check if already loading (prevent duplicates)
             if (loadingAreas.has(areaName)) {
-                console.log(`⏳ ${areaName}: Already loading, please wait...`);
+                console.log(`â³ ${areaName}: Already loading, please wait...`);
                 return [];
             }
             
@@ -1162,7 +1642,7 @@
             showAreaLoadingSpinner(areaName);
             
             try {
-                console.log(`📡 ${areaName}: Loading from API...`);
+                console.log(`ðŸ“¡ ${areaName}: Loading from API...`);
                 const url = `${APPS_SCRIPT_URL}?area=${encodeURIComponent(areaName)}`;
                 const response = await fetch(url);
                 
@@ -1175,7 +1655,7 @@
                 if (data.success && data.properties) {
                     // Transform Google Sheets data
                     const areaProperties = data.properties.map(prop => {
-                        // Parse bedrooms: "1 - 2" → [1, 2]
+                        // Parse bedrooms: "1 - 2" â†’ [1, 2]
                         const bedMatch = prop.bedrooms.match(/(\d+)\s*-\s*(\d+)/);
                         const minBed = bedMatch ? parseInt(bedMatch[1]) : 1;
                         const maxBed = bedMatch ? parseInt(bedMatch[2]) : 1;
@@ -1299,7 +1779,7 @@
                     // Add to global properties array
                     properties.push(...validProperties);
                     
-                    console.log(`✅ ${areaName}: Loaded ${validProperties.length} properties`);
+                    console.log(`âœ&hellip; ${areaName}: Loaded ${validProperties.length} properties`);
                     
                     loadingAreas.delete(areaName);
                     hideAreaLoadingSpinner();
@@ -1309,7 +1789,7 @@
                     throw new Error(data.error || 'No properties returned');
                 }
             } catch (error) {
-                console.error(`❌ ${areaName}: Load error:`, error);
+                console.error(`âŒ ${areaName}: Load error:`, error);
                 loadingAreas.delete(areaName);
                 hideAreaLoadingSpinner();
                 alert(`Failed to load ${areaName} properties. Please check your internet connection and try again.`);
@@ -1353,14 +1833,14 @@
 
         async function loadPropertiesFromGoogleSheets() {
             try {
-                console.log('🔄 Loading properties from Google Sheets...');
+                console.log('ðŸ”„ Loading properties from Google Sheets...');
                 const response = await fetch(APPS_SCRIPT_URL);
                 const data = await response.json();
                 
                 if (data.success && data.properties) {
                     // Transform Google Sheets data to match your app's format
                     properties = data.properties.map(prop => {
-                        // Parse bedrooms: "1 - 2" → [1, 2]
+                        // Parse bedrooms: "1 - 2" â†’ [1, 2]
                         const bedMatch = prop.bedrooms.match(/(\d+)\s*-\s*(\d+)/);
                         const minBed = bedMatch ? parseInt(bedMatch[1]) : 1;
                         const maxBed = bedMatch ? parseInt(bedMatch[2]) : 1;
@@ -1376,15 +1856,15 @@
                         // Check Column K first (manual override)
                         if (prop.leaseTermOverride && prop.leaseTermOverride > 0) {
                             leaseTermMonths = prop.leaseTermOverride;
-                            console.log(`✅ ${prop.name}: Using Column K lease term override: ${leaseTermMonths} months`);
+                            console.log(`âœ&hellip; ${prop.name}: Using Column K lease term override: ${leaseTermMonths} months`);
                         } else {
                             // Parse from specials text (original behavior)
                             const leaseMatch = prop.specials.match(/(\d+)\s*mo\s*lease/i);
                             if (leaseMatch) {
                                 leaseTermMonths = parseInt(leaseMatch[1]);
-                                console.log(`📋 ${prop.name}: Parsed lease term from specials: ${leaseTermMonths} months`);
+                                console.log(`ðŸ“‹ ${prop.name}: Parsed lease term from specials: ${leaseTermMonths} months`);
                             } else {
-                                console.log(`⚠️ ${prop.name}: No lease term found, using default: ${leaseTermMonths} months`);
+                                console.log(`&#x26A0;&#xFE0F; ${prop.name}: No lease term found, using default: ${leaseTermMonths} months`);
                             }
                         }
                         
@@ -1449,7 +1929,7 @@
                         
                         // Log if multiple values found (data quality check)
                         if (monthsFreeValues.length > 1) {
-                            console.warn(`⚠️ ${prop.name}: Multiple free rent values found [${monthsFreeValues.join(', ')}], using maximum: ${monthsFree}`);
+                            console.warn(`&#x26A0;&#xFE0F; ${prop.name}: Multiple free rent values found [${monthsFreeValues.join(', ')}], using maximum: ${monthsFree}`);
                         }
                         
                         // Gift card / credit
@@ -1460,11 +1940,11 @@
                         
                         // Validation: Cap at reasonable limits
                         if (monthsFree > 6) {
-                            console.warn(`⚠️ ${prop.name}: Capping ${monthsFree} months free to 6 months`);
+                            console.warn(`&#x26A0;&#xFE0F; ${prop.name}: Capping ${monthsFree} months free to 6 months`);
                             monthsFree = 6;
                         }
                         if (giftCard > 5000) {
-                            console.warn(`⚠️ ${prop.name}: Capping $${giftCard} gift card to $5000`);
+                            console.warn(`&#x26A0;&#xFE0F; ${prop.name}: Capping $${giftCard} gift card to $5000`);
                             giftCard = 5000;
                         }
                         
@@ -1502,7 +1982,7 @@
                         };
                     });
                     
-                    console.log(`📊 Loaded ${properties.length} properties from Google Sheets`);
+                    console.log(`ðŸ“Š Loaded ${properties.length} properties from Google Sheets`);
                     
                     // ============================================================
                     // DATA VALIDATION - Filter out invalid properties
@@ -1516,32 +1996,32 @@
                         if (!isCallForPricing) {
                             // Check for valid rent (must have minRent > 0)
                             if (!prop.minRent || prop.minRent <= 0) {
-                                console.warn(`⚠️ Excluding ${prop.name}: Invalid rent ($${prop.minRent})`);
+                                console.warn(`&#x26A0;&#xFE0F; Excluding ${prop.name}: Invalid rent ($${prop.minRent})`);
                                 return false;
                             }
                             
                             // Check for valid maxRent
                             if (!prop.maxRent || prop.maxRent <= 0) {
-                                console.warn(`⚠️ Excluding ${prop.name}: Invalid max rent ($${prop.maxRent})`);
+                                console.warn(`&#x26A0;&#xFE0F; Excluding ${prop.name}: Invalid max rent ($${prop.maxRent})`);
                                 return false;
                             }
                             
                             // Check that minRent <= maxRent
                             if (prop.minRent > prop.maxRent) {
-                                console.warn(`⚠️ Excluding ${prop.name}: Min rent > Max rent ($${prop.minRent} > $${prop.maxRent})`);
+                                console.warn(`&#x26A0;&#xFE0F; Excluding ${prop.name}: Min rent > Max rent ($${prop.minRent} > $${prop.maxRent})`);
                                 return false;
                             }
                         }
                         
                         // Check for valid area
                         if (!prop.area || prop.area.trim() === '') {
-                            console.warn(`⚠️ Excluding ${prop.name}: Missing area`);
+                            console.warn(`&#x26A0;&#xFE0F; Excluding ${prop.name}: Missing area`);
                             return false;
                         }
                         
                         // Check for valid name
                         if (!prop.name || prop.name.trim() === '') {
-                            console.warn(`⚠️ Excluding property: Missing name`);
+                            console.warn(`&#x26A0;&#xFE0F; Excluding property: Missing name`);
                             return false;
                         }
                         
@@ -1550,9 +2030,9 @@
                     
                     const afterValidation = properties.length;
                     if (beforeValidation !== afterValidation) {
-                        console.warn(`⚠️ Filtered out ${beforeValidation - afterValidation} invalid properties`);
+                        console.warn(`&#x26A0;&#xFE0F; Filtered out ${beforeValidation - afterValidation} invalid properties`);
                     }
-                    console.log(`✅ ${properties.length} valid properties loaded`);
+                    console.log(`âœ&hellip; ${properties.length} valid properties loaded`);
                     
                     // Calculate property classes
                     properties.forEach(p => p.calculatedClass = getPropertyClass(p));
@@ -1561,17 +2041,17 @@
                     initializeDefaults();
                     
                 } else {
-                    console.error('❌ Error loading properties:', data.error);
-                    console.warn('⚠️ Using sample properties as fallback');
+                    console.error('âŒ Error loading properties:', data.error);
+                    console.warn('&#x26A0;&#xFE0F; Using sample properties as fallback');
                     properties = sampleProperties;
                     properties.forEach(p => p.calculatedClass = getPropertyClass(p));
                     initializeDefaults();
                 }
             } catch (error) {
-                console.error('❌ Fetch error:', error);
-                console.warn('⚠️ CORS error detected - likely opening file locally (file://)');
-                console.warn('⚠️ Using sample properties as fallback');
-                console.warn('💡 To load real data: Use a local server or deploy to GitHub Pages');
+                console.error('âŒ Fetch error:', error);
+                console.warn('&#x26A0;&#xFE0F; CORS error detected - likely opening file locally (file://)');
+                console.warn('&#x26A0;&#xFE0F; Using sample properties as fallback');
+                console.warn('ðŸ’¡ To load real data: Use a local server or deploy to GitHub Pages');
                 
                 // Use sample properties as fallback
                 properties = sampleProperties;
@@ -1678,7 +2158,7 @@
             
             // CRITICAL VALIDATION: Never return $0 or negative rent
             if (effectiveRent <= 0) {
-                console.error(`❌ ERROR: ${property.name} - Effective rent calculated as $${effectiveRent}`);
+                console.error(`âŒ ERROR: ${property.name} - Effective rent calculated as $${effectiveRent}`);
                 console.error(`   Base: $${baseRent}, Months Free: ${discountInfo.months}, Gift Card: $${discountInfo.giftCard}, Lease: ${property.leaseTermMonths} mo`);
                 console.error(`   Returning base rent as fallback.`);
                 return baseRent;
@@ -1686,7 +2166,7 @@
             
             // Sanity check: Effective rent should be at least 20% of base rent
             if (effectiveRent < baseRent * 0.2) {
-                console.warn(`⚠️ WARNING: ${property.name} - Effective rent ($${effectiveRent}) is less than 20% of base rent ($${baseRent})`);
+                console.warn(`&#x26A0;&#xFE0F; WARNING: ${property.name} - Effective rent ($${effectiveRent}) is less than 20% of base rent ($${baseRent})`);
                 console.warn(`   Months Free: ${discountInfo.months}, Gift Card: $${discountInfo.giftCard}, Lease: ${property.leaseTermMonths} mo`);
                 console.warn(`   Please verify the specials data in Google Sheets.`);
             }
@@ -1818,6 +2298,8 @@
                 polygon.on('click', function(e) {
                     L.DomEvent.stopPropagation(e);
                     toggleAreaSelection(name);
+                    // Update the info panel when clicking
+                    showAreaInfo(name);
                 });
 
                 polygon.on('mouseover', function() {
@@ -1825,34 +2307,15 @@
                     if (!selected) {
                         this.setStyle({ fillOpacity: 0.3 });
                     }
-                    // Show tooltip with landmarks and bullet points
-                    const desc = areaDescriptions[name];
-                    let tooltipText = `<b>${name}</b>`;
-                    
-                    if (desc) {
-                        // Add landmarks
-                        tooltipText += `<br><span style="font-size: 0.85em; color: #555; font-style: italic;">${desc.landmarks}</span>`;
-                        // Add bullet points
-                        tooltipText += '<ul style="margin: 0.5em 0 0 0; padding-left: 1.2em; font-size: 0.88em; line-height: 1.5;">';
-                        desc.bullets.forEach(bullet => {
-                            tooltipText += `<li>${bullet}</li>`;
-                        });
-                        tooltipText += '</ul>';
-                    }
-                    
-                    tooltipText += `<br><span style="font-size: 0.85em; font-style: italic; font-weight: bold;">${selected ? '&#x2713; Click to deselect' : 'Click to select'}</span>`;
-                    
-                    this.bindTooltip(tooltipText, {
-                        sticky: true,
-                        className: 'area-tooltip'
-                    }).openTooltip();
+                    // Show area info in fixed panel (top-right corner)
+                    showAreaInfo(name);
                 });
 
                 polygon.on('mouseout', function() {
                     if (!selectedAreas.has(name)) {
                         this.setStyle({ fillOpacity: 0.15 });
                     }
-                    this.closeTooltip();
+                    // Keep info panel visible on mouseout (user can close manually)
                 });
 
                 polygonStorage[name] = polygon;
@@ -1938,7 +2401,7 @@
             map = L.map('map', { zoomControl: true }).setView([30.2672, -97.7431], 10);
             // Position zoom control to top-left
             map.zoomControl.setPosition('topleft');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Â© OpenStreetMap', maxZoom: 18 }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Ã‚Â© OpenStreetMap', maxZoom: 18 }).addTo(map);
             createPolygons(map, polygons, checkmarkMarkers);
         }
 
@@ -1946,7 +2409,7 @@
             if (mobileMap) return;
             mobileMap = L.map('mobileMap', { zoomControl: true }).setView([30.2672, -97.7431], 10);
             mobileMap.zoomControl.setPosition('topleft');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Â© OpenStreetMap', maxZoom: 18 }).addTo(mobileMap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Ã‚Â© OpenStreetMap', maxZoom: 18 }).addTo(mobileMap);
             createPolygons(mobileMap, mobilePolygons, mobileCheckmarkMarkers, true);
         }
 
@@ -2049,6 +2512,66 @@
             }, 100);
         }
 
+
+        // Area Info Panel Functions
+        function showAreaInfo(areaName) {
+            const infoPanel = document.getElementById('mapAreaInfo');
+            const desc = areaDescriptions[areaName];
+            const selected = selectedAreas.has(areaName);
+            
+            // Populate info panel
+            document.getElementById('areaInfoTitle').textContent = areaName;
+            
+            if (desc) {
+                document.getElementById('areaInfoLandmarks').textContent = desc.landmarks;
+                
+                // Populate bullets
+                const bulletsList = document.getElementById('areaInfoBullets');
+                bulletsList.innerHTML = '';
+                desc.bullets.forEach(bullet => {
+                    const li = document.createElement('li');
+                    li.textContent = bullet;
+                    bulletsList.appendChild(li);
+                });
+            } else {
+                document.getElementById('areaInfoLandmarks').textContent = '';
+                document.getElementById('areaInfoBullets').innerHTML = '';
+            }
+            
+            // Show selection status
+            document.getElementById('areaInfoAction').innerHTML = selected ? 
+                '&#x2713; Click to deselect' : 
+                'Click to select';
+            
+            // Show the panel
+            infoPanel.classList.add('visible');
+        }
+        
+        function hideAreaInfo() {
+            document.getElementById('mapAreaInfo').classList.remove('visible');
+        }
+
+        // Mobile Filter Toggle
+        function toggleMobileFilters() {
+            const filterGrid = document.querySelector('.filter-grid');
+            const toggleBtn = document.getElementById('mobileFilterToggle');
+            
+            if (filterGrid.classList.contains('expanded')) {
+                filterGrid.classList.remove('expanded');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '&#128269; Filters';
+            } else {
+                filterGrid.classList.add('expanded');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '&#10003; Hide Filters';
+                
+                // Scroll to filters smoothly
+                setTimeout(() => {
+                    filterGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+
         function closeMobileMap() {
             document.getElementById('mobileMapOverlay').classList.remove('active');
         }
@@ -2147,20 +2670,20 @@
                 container.innerHTML = `
                     <div class="select-areas-prompt">
                         <h3>&#x1F44B; Let's Find Your Perfect Place!</h3>
-                        <p style="line-height: 1.6; margin-bottom: 0.5rem;">Just follow these 3 easy steps — start from the top and work your way down:</p>
+                        <p style="line-height: 1.6; margin-bottom: 0.5rem;">Just follow these 3 easy steps "” start from the top and work your way down:</p>
                         <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
-                            <strong>1️⃣ Choose Your Property Type</strong><br>
+                            <strong><span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#00839b;color:white;border-radius:50%;font-weight:bold;font-size:13px;margin-right:4px;">1</span> Choose Your Property Type</strong><br>
                             Select "Market Rate" (open to all applicants) or "Tax Credit" if you qualify under the income limits shown on the map.
                         </p>
                         <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
-                            <strong>2️⃣ Pick Your Area</strong><br>
+                            <strong><span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#00839b;color:white;border-radius:50%;font-weight:bold;font-size:13px;margin-right:4px;">2</span> Pick Your Area</strong><br>
                             Tap the map or use the dropdown to select up to 5 neighborhoods you'd like to explore.
                         </p>
                         <p style="line-height: 1.6; margin: 0.3rem 0; font-size: 0.9rem;">
-                            <strong>3️⃣ Set Your Filters</strong><br>
+                            <strong><span style="display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:#00839b;color:white;border-radius:50%;font-weight:bold;font-size:13px;margin-right:4px;">3</span> Set Your Filters</strong><br>
                             Choose your bedrooms, budget, property class, and amenities to narrow down the best matches for you.
                         </p>
-                        <p style="margin-top: 0.8rem; font-weight: 600; color: var(--teal);">&#x1F449; Start by clicking an area on the map — your matches will appear instantly!</p>
+                        <p style="margin-top: 0.8rem; font-weight: 600; color: var(--teal);">&#x1F449; Start by clicking an area on the map "” your matches will appear instantly!</p>
                     </div>
                 `;
                 return;
@@ -2216,7 +2739,7 @@
             if (filteredProperties.length > 0) {
                 compareTop5Button = `
                     <button onclick="compareTop5()" class="shimmer-button" style="width: 100%; background: linear-gradient(135deg, #cb2d6f 0%, #e84a8a 100%); color: white; padding: 1.2rem; border: 2px solid #1a1a1a; border-radius: 12px; margin-bottom: 1.8rem; text-align: center; cursor: pointer; box-shadow: 0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2); font-family: inherit; transition: all 0.3s; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(203,45,111,0.6), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(203,45,111,0.5), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.2)';">
-                        <div style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">⚡ Get My Top ${Math.min(5, filteredProperties.length)} ${filteredProperties.length === 1 ? 'Match' : 'Matches'}</div>
+                        <div style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">âš¡ Get My Top ${Math.min(5, filteredProperties.length)} ${filteredProperties.length === 1 ? 'Match' : 'Matches'}</div>
                         <div style="font-size: 0.88rem; opacity: 0.95; font-weight: 500; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">Your personalized shortlist + tour plan</div>
                     </button>
                 `;
@@ -2307,7 +2830,7 @@
                 // Hide ALL names until form submission (Hotwire-style lead capture)
                 if (!hasSubmittedForm) {
                     // BEFORE form submission: Hide ALL property names
-                    propertyTitle = `🔒 Hidden Deal - Class ${p.calculatedClass}`;
+                    propertyTitle = `ðŸ”’ Hidden Deal - Class ${p.calculatedClass}`;
                     displayLocation = p.area; // Show only area, NOT address
                 } else {
                     // AFTER form submission: Show actual names and addresses
@@ -2386,7 +2909,7 @@
                     basePriceDisplay = `${pricingLabel}: Est. ~$${p.baseRent.toLocaleString()}/mo`;
                 }
                 
-                return `<div class="property-card ${rankClass}" onclick="openModal(['${p.name}'],event)">${badge}<div class="card-top"><div class="property-info"><div class="property-name">${propertyTitle}</div><div class="property-location">${displayLocation}</div><div class="property-meta"><span>${bedroomDisplay}</span>${ratingBadge}</div></div>${discountCircle}</div><div class="year-info">${yearDisplay} &#x2022; ${leaseTermDisplay}</div><div class="specials-tag">&#x1F381; ${specialsText}</div><div class="pricing-row"><div class="price-info"><div class="effective-price">${effectivePriceDisplay}</div>${basePriceDisplay ? `<div class="original-price">${basePriceDisplay}</div>` : ''}</div>${savingsDisplay}</div><div class="card-actions"><label class="compare-checkbox-label" onclick="event.stopPropagation();"><input type="checkbox" class="compare-checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.name}',event)"><span class="checkbox-text">Compare</span></label><button class="btn-details" onclick="openModal(['${p.name}'],event)">&#x1F513; Get Details</button></div><div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.68rem; line-height: 1.4; color: #6b7280;"><div style="margin-bottom: 0.25rem;">Built with ❤️ by <strong style="color: var(--teal);">Ross Quade</strong> in Austin</div><div style="font-size: 0.65rem;">Got a question? <strong style="color: var(--teal);"><a href="tel:512-943-6852" style="color: var(--teal); text-decoration: none;">Text 512-943-6852</a></strong></div><div style="font-size: 0.62rem; margin-top: 0.2rem; color: #9ca3af;">Property ID: <strong style="color: #6b7280;">${p.propertyCode}</strong></div></div></div>`;
+                return `<div class="property-card ${rankClass}" onclick="openModal(['${p.name}'],event)">${badge}<div class="card-top"><div class="property-info"><div class="property-name">${propertyTitle}</div><div class="property-location">${displayLocation}</div><div class="property-meta"><span>${bedroomDisplay}</span>${ratingBadge}</div></div>${discountCircle}</div><div class="year-info">${yearDisplay} &#x2022; ${leaseTermDisplay}</div><div class="specials-tag">&#x1F381; ${specialsText}</div><div class="pricing-row"><div class="price-info"><div class="effective-price">${effectivePriceDisplay}</div>${basePriceDisplay ? `<div class="original-price">${basePriceDisplay}</div>` : ''}</div>${savingsDisplay}</div><div class="card-actions"><label class="compare-checkbox-label" onclick="event.stopPropagation();"><input type="checkbox" class="compare-checkbox" ${isCompared ? 'checked' : ''} onchange="toggleCompare('${p.name}',event)"><span class="checkbox-text">Compare</span></label><button class="btn-details" onclick="openModal(['${p.name}'],event)">&#x1F513; Get Details</button></div><div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.68rem; line-height: 1.4; color: #6b7280;"><div style="margin-bottom: 0.25rem;">Built with â¤ï¸ by <strong style="color: var(--teal);">Ross Quade</strong> in Austin</div><div style="font-size: 0.65rem;">Got a question? <strong style="color: var(--teal);"><a href="tel:512-943-6852" style="color: var(--teal); text-decoration: none;">Text 512-943-6852</a></strong></div><div style="font-size: 0.62rem; margin-top: 0.2rem; color: #9ca3af;">Property ID: <strong style="color: #6b7280;">${p.propertyCode}</strong></div></div></div>`;
             }).join('');
         }
 
@@ -2430,9 +2953,9 @@
             const displayNames = names.map(name => {
                 if (hasSubmitted) return name;
                 const prop = properties.find(p => p.name === name);
-                return prop ? `🔒 Hidden Deal - Class ${prop.calculatedClass}` : '🔒 Hidden Property';
+                return prop ? `ðŸ”’ Hidden Deal - Class ${prop.calculatedClass}` : 'ðŸ”’ Hidden Property';
             });
-            document.getElementById('modalContent').innerHTML = `<div class="modal-header"><h2>&#x1F513; Unlock Hidden Property Details</h2><p>See exact names, addresses, and exclusive deals</p></div><div class="modal-body"><div class="selected-properties-preview"><h3>Selected Properties (${names.length})</h3>${displayNames.map(n => `<div class="selected-property-item">${n}</div>`).join('')}</div><div style="background:#fef2f2;border:2px solid#fecaca;border-radius:8px;padding:0.75rem;margin-bottom:1rem;font-size:0.8rem;color:#991b1b;"><strong>⚠️ Note:</strong> Pricing shown is estimated. Actual rent, discounts, and availability vary by unit and move-in date. A specialist will confirm exact pricing when they contact you.</div><form id="leadForm" onsubmit="handleFormSubmit(event)"><div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);padding:1rem;border-radius:8px;margin-bottom:1rem;border:2px solid var(--teal);"><h3 style="color:var(--teal);font-size:0.9rem;margin-bottom:0.75rem;text-align:center;">📋 Qualification Information</h3><div class="form-group"><label>Rental History *</label><select name="rentalHistory" required><option value="">Select...</option><option value="clean">✅ Clean Record</option><option value="eviction">⚠️ Eviction</option><option value="debt">⚠️ Property Debt</option><option value="broken">⚠️ Broken Lease</option></select></div><div class="form-group"><label>Credit Score *</label><select name="creditScore" required><option value="">Select...</option><option value="excellent">✅ Excellent (700+)</option><option value="good">✅ Good (650-699)</option><option value="fair">✅ Fair (575-649)</option><option value="improving">⚠️ Improving (Below 575)</option></select></div><div class="form-group"><label>Background Check *</label><select name="background" required><option value="">Select...</option><option value="perfect">✅ Perfect</option><option value="misdemeanor">⚠️ Misdemeanor</option><option value="felony">⚠️ Felony</option></select></div></div><div class="form-group"><label>Full Name *</label><input type="text" name="name" required placeholder="John Doe"></div><div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="john@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(512) 555-1234"></div><div class="form-group"><label>Monthly Budget *</label><input type="text" name="budget" required placeholder="$1,500 - $2,000"></div><div class="form-group"><label>Move-in Date *</label><input type="date" name="moveInDate" required></div><div class="form-group"><label>Notes</label><textarea name="notes" placeholder="Any special requirements..."></textarea></div><div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button><button type="submit" class="btn-submit">&#x1F513; Unlock Details</button></div></form></div>`;
+            document.getElementById('modalContent').innerHTML = `<div class="modal-header"><h2>&#x1F513; Unlock Hidden Property Details</h2><p>See exact names, addresses, and exclusive deals</p></div><div class="modal-body"><div class="selected-properties-preview"><h3>Selected Properties (${names.length})</h3>${displayNames.map(n => `<div class="selected-property-item">${n}</div>`).join('')}</div><div style="background:#fef2f2;border:2px solid#fecaca;border-radius:8px;padding:0.75rem;margin-bottom:1rem;font-size:0.8rem;color:#991b1b;"><strong>&#x26A0;&#xFE0F; Note:</strong> Pricing shown is estimated. Actual rent, discounts, and availability vary by unit and move-in date. A specialist will confirm exact pricing when they contact you.</div><form id="leadForm" onsubmit="handleFormSubmit(event)"><div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);padding:1rem;border-radius:8px;margin-bottom:1rem;border:2px solid var(--teal);"><h3 style="color:var(--teal);font-size:0.9rem;margin-bottom:0.75rem;text-align:center;">ðŸ“‹ Qualification Information</h3><div class="form-group"><label>Rental History *</label><select name="rentalHistory" required><option value="">Select...</option><option value="clean">âœ&hellip; Clean Record</option><option value="eviction">&#x26A0;&#xFE0F; Eviction</option><option value="debt">&#x26A0;&#xFE0F; Property Debt</option><option value="broken">&#x26A0;&#xFE0F; Broken Lease</option></select></div><div class="form-group"><label>Credit Score *</label><select name="creditScore" required><option value="">Select...</option><option value="excellent">âœ&hellip; Excellent (700+)</option><option value="good">âœ&hellip; Good (650-699)</option><option value="fair">âœ&hellip; Fair (575-649)</option><option value="improving">&#x26A0;&#xFE0F; Improving (Below 575)</option></select></div><div class="form-group"><label>Background Check *</label><select name="background" required><option value="">Select...</option><option value="perfect">âœ&hellip; Perfect</option><option value="misdemeanor">&#x26A0;&#xFE0F; Misdemeanor</option><option value="felony">&#x26A0;&#xFE0F; Felony</option></select></div></div><div class="form-group"><label>Full Name *</label><input type="text" name="name" required placeholder="John Doe"></div><div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="john@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" name="phone" required placeholder="(512) 555-1234"></div><div class="form-group"><label>Monthly Budget *</label><input type="text" name="budget" required placeholder="$1,500 - $2,000"></div><div class="form-group"><label>Move-in Date *</label><input type="date" name="moveInDate" required></div><div class="form-group"><label>Notes</label><textarea name="notes" placeholder="Any special requirements..."></textarea></div><div class="form-actions"><button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button><button type="submit" class="btn-submit">&#x1F513; Unlock Details</button></div></form></div>`;
             document.getElementById('modalOverlay').classList.add('active');
         }
         function openComparisonModal() { openModal(Array.from(comparedProperties), null); }
@@ -2468,17 +2991,17 @@
                 }
             }).then(response => {
                 if (response.ok) {
-                    console.log('✅ Form submitted to Formspree successfully');
+                    console.log('âœ&hellip; Form submitted to Formspree successfully');
                 } else {
-                    console.error('❌ Formspree submission error');
+                    console.error('âŒ Formspree submission error');
                 }
             }).catch(error => {
-                console.error('❌ Formspree error:', error);
+                console.error('âŒ Formspree error:', error);
             });
             
             // Save that user submitted form
             localStorage.setItem('formSubmitted', 'true');
-            alert('🎉 Success! A specialist will contact you within 24 hours.'); 
+            alert('ðŸŽ‰ Success! A specialist will contact you within 24 hours.'); 
             closeModal(); 
             comparedProperties.clear(); 
             updateComparisonBar(); 
@@ -2496,20 +3019,20 @@
         }
         function showQualificationModal(issues) { document.getElementById('qualificationMessage').innerHTML = `<strong>Important:</strong> You indicated having <strong>${issues.join(', ')}</strong>.<br><br>Many properties may deny your application, wasting fees ($50-$100+ each).`; document.getElementById('qualificationModal').classList.add('active'); }
         function closeQualificationModal() { document.getElementById('qualificationModal').classList.remove('active'); document.getElementById('rentalHistorySelect').value = 'none'; document.getElementById('creditSelect').value = 'excellent'; document.getElementById('backgroundSelect').value = 'perfect'; }
-        function handleQualificationSubmit(e) { e.preventDefault(); alert('ðŸ¤ Thank you! Our specialist will contact you within 24 hours.'); closeQualificationModal(); }
+        function handleQualificationSubmit(e) { e.preventDefault(); alert('Ã°Å¸Â¤Â Thank you! Our specialist will contact you within 24 hours.'); closeQualificationModal(); }
 
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // PROFESSIONAL PERCENTAGE-BASED TIER SYSTEM
         // Scales intelligently across all rent ranges!
         // Budget renters: 5% threshold, Luxury renters: 8% threshold
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         function calculateDealScore(property, allFilteredProperties) {
             const currentYear = new Date().getFullYear();
             
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // 1. QUALITY SCORE (0-100)
             // This is what matters MOST within the same price tier
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             
             // Rating component (0-100)
             const ratingScore = property.rating > 0 ? (property.rating / 5) * 100 : 50;
@@ -2556,12 +3079,12 @@
                 (ageScore * 0.35) +       // 35% age
                 (discountScore * 0.25);   // 25% discount
             
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // 2. INTELLIGENT PRICE TIER SYSTEM
             // Percentage-based thresholds that scale with rent level!
             // Budget renters = more price-sensitive (5%)
             // Luxury renters = less price-sensitive (8%)
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const rents = allFilteredProperties.map(p => p.effectiveRent);
             const minRent = Math.min(...rents);
             const priceDifference = property.effectiveRent - minRent;
@@ -2574,39 +3097,39 @@
                 const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
                 
                 if (hasPriceFilter) {
-                    // USER SET BUDGET → Rank by QUALITY with aggressive thresholds!
+                    // USER SET BUDGET â†’ Rank by QUALITY with aggressive thresholds!
                     // Progressive: Higher budgets get slightly more generous thresholds
                     if (rent < 2000) {
                         // Budget/Mid-range with filter: 5% threshold (most aggressive!)
-                        // Example: $1,500 → $75 threshold
+                        // Example: $1,500 â†’ $75 threshold
                         return rent * 0.05;
                     } else if (rent < 3000) {
                         // Upper-mid with filter: 7% threshold
-                        // Example: $2,500 → $175 threshold
+                        // Example: $2,500 â†’ $175 threshold
                         return rent * 0.07;
                     } else {
                         // Luxury with filter: 10% threshold
-                        // Example: $4,000 → $400 threshold
+                        // Example: $4,000 â†’ $400 threshold
                         return rent * 0.10;
                     }
                 }
                 
-                // No price filter → Use standard progressive tiers
+                // No price filter â†’ Use standard progressive tiers
                 if (rent < 1200) {
                     // Budget tier: 5% threshold
-                    // $1,000 → $50 threshold
+                    // $1,000 â†’ $50 threshold
                     return rent * 0.05;
                 } else if (rent < 2000) {
                     // Mid-range tier: 6% threshold
-                    // $1,500 → $90 threshold
+                    // $1,500 â†’ $90 threshold
                     return rent * 0.06;
                 } else if (rent < 3000) {
                     // Upper-mid tier: 7% threshold
-                    // $2,500 → $175 threshold
+                    // $2,500 â†’ $175 threshold
                     return rent * 0.07;
                 } else {
                     // Luxury tier: 8% threshold
-                    // $4,000 → $320 threshold
+                    // $4,000 â†’ $320 threshold
                     return rent * 0.08;
                 }
             }
@@ -2632,9 +3155,9 @@
                 pricePenalty = 20 + Math.min(excessRatio * 15, 30);
             }
             
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // 3. BONUS POINTS (Utilities, waived fees, etc.)
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             let bonusPoints = 0;
             const specialsLower = property.specials.toLowerCase();
             
@@ -2653,9 +3176,9 @@
                 bonusPoints += 5;
             }
             
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // 4. FINAL SCORE = Quality - Price Penalty + Bonuses
-            // ───────────────────────────────────────────────────────────
+            // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const totalScore = qualityScore - pricePenalty + bonusPoints;
             
             return {
@@ -2762,9 +3285,9 @@
                 };
             });
 
-            // ═══════════════════════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             // APPLY PRICE RANGE FILTER (after calculating effectiveRent)
-            // ═══════════════════════════════════════════════════════════════
+            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             filteredProperties = filterByPriceRange(filteredProperties);
 
             switch (sort) {
@@ -2778,18 +3301,18 @@
                     // Sort by score (highest first)
                     filteredProperties.sort((a, b) => b.dealScore - a.dealScore);
                     // Log top 5 for debugging
-                    console.log('🏆 TOP 5 BEST DEALS (Percentage-Based Tier System):');
+                    console.log('ðŸ† TOP 5 BEST DEALS (Percentage-Based Tier System):');
                     const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
                     if (hasPriceFilter) {
-                        console.log('⚡ BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
+                        console.log('âš¡ BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
                     }
                     filteredProperties.slice(0, 5).forEach((p, i) => {
                         console.log(`${i+1}. ${p.name} - Score: ${p.dealScore.toFixed(1)}`);
-                        console.log(`   Rent: $${p.effectiveRent}, Rating: ${p.rating}★, Age: ${p.yearBuilt ? new Date().getFullYear() - p.yearBuilt : '?'} yrs`);
+                        console.log(`   Rent: $${p.effectiveRent}, Rating: ${p.rating}â˜&hellip;, Age: ${p.yearBuilt ? new Date().getFullYear() - p.yearBuilt : '?'} yrs`);
                         console.log(`   Quality: ${p.scoreBreakdown.quality.toFixed(1)} (Rating: ${p.scoreBreakdown.rating.toFixed(1)}, Age: ${p.scoreBreakdown.age.toFixed(1)}, Discount: ${p.scoreBreakdown.discount.toFixed(1)})`);
-                        console.log(`   Price: $${p.scoreBreakdown.priceDifference.toFixed(0)} above cheapest (Tier: ${p.scoreBreakdown.tierThresholdPercent}% = $${p.scoreBreakdown.tierThreshold.toFixed(0)}) → Penalty: ${p.scoreBreakdown.pricePenalty.toFixed(1)}, Bonus: ${p.scoreBreakdown.bonus}`);
+                        console.log(`   Price: $${p.scoreBreakdown.priceDifference.toFixed(0)} above cheapest (Tier: ${p.scoreBreakdown.tierThresholdPercent}% = $${p.scoreBreakdown.tierThreshold.toFixed(0)}) â†’ Penalty: ${p.scoreBreakdown.pricePenalty.toFixed(1)}, Bonus: ${p.scoreBreakdown.bonus}`);
                         if (p.scoreBreakdown.priceDifference <= p.scoreBreakdown.tierThreshold) {
-                            console.log(`   💡 Within ${p.scoreBreakdown.tierThresholdPercent}% tier - ranked by QUALITY only!`);
+                            console.log(`   ðŸ’¡ Within ${p.scoreBreakdown.tierThresholdPercent}% tier - ranked by QUALITY only!`);
                         }
                     });
                     break;
@@ -2820,7 +3343,7 @@
                 o.value = a;
                 // Show area name with landmarks
                 const desc = areaDescriptions[a];
-                o.textContent = desc ? `${a} – ${desc.landmarks}` : a;
+                o.textContent = desc ? `${a} "“ ${desc.landmarks}` : a;
                 s.appendChild(o);
             });
         }
@@ -2843,15 +3366,15 @@
             initMap();
             renderProperties(); // Show welcome message immediately before data loads
             // ON-DEMAND LOADING: Properties load when user selects an area
-            console.log('✅ Page loaded instantly! Properties will load when you select an area.');
+            console.log('âœ&hellip; Page loaded instantly! Properties will load when you select an area.');
         });
 
         document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
     
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // URL PARAMETER SUPPORT - Auto-filter based on URL
         // Supports: ?bedrooms=1&propertyType=income-restricted
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         function getURLParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
@@ -2950,10 +3473,10 @@
         }
 
 
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         // PRICE RANGE FILTERING
         // Supports: ?price=under-1000, 1000-1500, 1500-2000, over-2000
-        // ═══════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         function filterByPriceRange(properties) {
             if (!window.urlPriceRange) {
                 return properties; // No price filter applied
