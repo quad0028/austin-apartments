@@ -1162,7 +1162,7 @@
     <header class="site-header">
         <div class="header-logo">
             <a href="https://austinapartments.com" title="Austin Apartments Team">
-                <img src="https://cdn.carrot.com/uploads/sites/81937/2025/12/Austin-Apartment-Team-Logo.png" alt="Austin Apartments Team" width="414" height="83">
+                <img src="https://cdn.carrot.com/uploads/sites/81937/2025/12/Austin-Apartment-Team-Logo.png" alt="Austin Apartment Team" width="414" height="83">
             </a>
         </div>
     </header>
@@ -1582,7 +1582,7 @@
         };
 
         // Pricing increments based on Austin market research (within same community)
-        // Studio Ã¢" ' 1BR: ~$200 avg | 1BR Ã¢" ' 2BR: ~$300 avg | 2BR Ã¢" ' 3BR: ~$400 avg
+        // Studio → 1BR: ~$200 avg | 1BR → 2BR: ~$300 avg | 2BR → 3BR: ~$400 avg
         const BEDROOM_INCREMENTS = {
             'studio_to_1br': 200,
             '1br_to_2br': 300,
@@ -1599,7 +1599,7 @@
         // ============================================================================
         // GOOGLE APPS SCRIPT INTEGRATION - WORKING PRODUCTION URL
         // ============================================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwN6Wxv5beggAlwDP6YY9d6M0nBwasTVMO6_xeOVc0ikrSWuzFZ2SWVZyXa_GoMTdP-/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznshbCwMKORad9t3Sd59hbH7S8Bx7tL1ioCsbk4MnXkYzwdoeshfd-kCG1McAs9rwW/exec';
         
         // Formspree endpoint for lead capture
         const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xldqlapj';
@@ -1654,25 +1654,51 @@
         // ============================================================================
         // ON-DEMAND LOADING: Load properties for a specific area
         // ============================================================================
+
         async function loadAreaProperties(areaName) {
-            // Check if already loaded (cache hit)
+            // ✅ STEP 1: Check localStorage first (persistent cache)
+            const cacheKey = `area_${areaName}`;
+            const cacheTimeKey = `${cacheKey}_time`;
+            const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
+            
+            try {
+                const cached = localStorage.getItem(cacheKey);
+                const cacheTime = localStorage.getItem(cacheTimeKey);
+                const now = Date.now();
+                
+                if (cached && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+                    console.log(`✅ ${areaName}: localStorage cache HIT (age: ${Math.round((now - parseInt(cacheTime)) / 1000)}s)`);
+                    const properties = JSON.parse(cached);
+                    areaPropertiesCache[areaName] = properties;
+                    return properties;
+                }
+                
+                if (cached && cacheTime) {
+                    console.log(`⏰ ${areaName}: localStorage cache EXPIRED (age: ${Math.round((now - parseInt(cacheTime)) / 1000)}s)`);
+                }
+            } catch (e) {
+                console.log(`⚠️ ${areaName}: localStorage read error:`, e);
+            }
+            
+            // ✅ STEP 2: Check in-memory cache
             if (areaPropertiesCache[areaName]) {
-                console.log(`&#x2705; ${areaName}: Using cached properties (${areaPropertiesCache[areaName].length} properties)`);
+                console.log(`✅ ${areaName}: Using in-memory cache (${areaPropertiesCache[areaName].length} properties)`);
                 return areaPropertiesCache[areaName];
             }
             
-            // Check if already loading (prevent duplicates)
+            // ✅ STEP 3: Check if already loading (prevent duplicates)
             if (loadingAreas.has(areaName)) {
-                console.log(`â³ ${areaName}: Already loading, please wait...`);
+                console.log(`⏳ ${areaName}: Already loading, please wait...`);
                 return [];
             }
             
-            // Mark as loading
+            // ✅ STEP 4: Fetch from API
             loadingAreas.add(areaName);
             showAreaLoadingSpinner(areaName);
             
             try {
-                console.log(`ðŸ“¡ ${areaName}: Loading from API...`);
+                console.log(`📡 ${areaName}: Fetching from API (Sheets API v4 + CacheService)...`);
+                const startTime = performance.now();
                 const url = `${APPS_SCRIPT_URL}?area=${encodeURIComponent(areaName)}`;
                 const response = await fetch(url);
                 
@@ -1682,6 +1708,8 @@
                 
                 const data = await response.json();
                 
+                const fetchTime = Math.round(performance.now() - startTime);
+                console.log(`⏱️ ${areaName}: API responded in ${fetchTime}ms`);
                 if (data.success && data.properties) {
                     // Transform Google Sheets data
                     const areaProperties = data.properties.map(prop => {
@@ -1806,6 +1834,16 @@
                     // Cache the properties
                     areaPropertiesCache[areaName] = validProperties;
                     
+                    // ✅ Save to localStorage
+                    try {
+                        const now = Date.now();
+                        localStorage.setItem(cacheKey, JSON.stringify(validProperties));
+                        localStorage.setItem(cacheTimeKey, now.toString());
+                        console.log(`💾 ${areaName}: Saved to localStorage (${validProperties.length} properties)`);
+                    } catch (e) {
+                        console.log(`⚠️ ${areaName}: localStorage save error:`, e);
+                    }
+                    
                     // Add to global properties array
                     properties.push(...validProperties);
                     
@@ -1863,7 +1901,7 @@
 
         async function loadPropertiesFromGoogleSheets() {
             try {
-                console.log('ðŸ”„ Loading properties from Google Sheets...');
+                console.log('📄 Loading properties from Google Sheets...');
                 const response = await fetch(APPS_SCRIPT_URL);
                 const data = await response.json();
                 
@@ -2012,7 +2050,7 @@
                         };
                     });
                     
-                    console.log(`ðŸ“Š Loaded ${properties.length} properties from Google Sheets`);
+                    console.log(`📊 Loaded ${properties.length} properties from Google Sheets`);
                     
                     // ============================================================
                     // DATA VALIDATION - Filter out invalid properties
@@ -2081,7 +2119,7 @@
                 console.error('âŒ Fetch error:', error);
                 console.warn('&#x26A0;&#xFE0F; CORS error detected - likely opening file locally (file://)');
                 console.warn('&#x26A0;&#xFE0F; Using sample properties as fallback');
-                console.warn('ðŸ’¡ To load real data: Use a local server or deploy to GitHub Pages');
+                console.warn('💡 To load real data: Use a local server or deploy to GitHub Pages');
                 
                 // Use sample properties as fallback
                 properties = sampleProperties;
@@ -2431,7 +2469,7 @@
             map = L.map('map', { zoomControl: true }).setView([30.2672, -97.7431], 10);
             // Position zoom control to top-left
             map.zoomControl.setPosition('topleft');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Ã‚Â© OpenStreetMap', maxZoom: 18 }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 18 }).addTo(map);
             createPolygons(map, polygons, checkmarkMarkers);
         }
 
@@ -2439,7 +2477,7 @@
             if (mobileMap) return;
             mobileMap = L.map('mobileMap', { zoomControl: true }).setView([30.2672, -97.7431], 10);
             mobileMap.zoomControl.setPosition('topleft');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Ã‚Â© OpenStreetMap', maxZoom: 18 }).addTo(mobileMap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 18 }).addTo(mobileMap);
             createPolygons(mobileMap, mobilePolygons, mobileCheckmarkMarkers, true);
         }
 
@@ -3032,7 +3070,7 @@
             
             // Save that user submitted form
             localStorage.setItem('formSubmitted', 'true');
-            alert('ðŸŽ‰ Success! A specialist will contact you within 24 hours.'); 
+            alert('🎉 Success! A specialist will contact you within 24 hours.');
             closeModal(); 
             comparedProperties.clear(); 
             updateComparisonBar(); 
@@ -3050,13 +3088,13 @@
         }
         function showQualificationModal(issues) { document.getElementById('qualificationMessage').innerHTML = `<strong>Important:</strong> You indicated having <strong>${issues.join(', ')}</strong>.<br><br>Many properties may deny your application, wasting fees ($50-$100+ each).`; document.getElementById('qualificationModal').classList.add('active'); }
         function closeQualificationModal() { document.getElementById('qualificationModal').classList.remove('active'); document.getElementById('rentalHistorySelect').value = 'none'; document.getElementById('creditSelect').value = 'excellent'; document.getElementById('backgroundSelect').value = 'perfect'; }
-        function handleQualificationSubmit(e) { e.preventDefault(); alert('Ã°Å¸Â¤Â Thank you! Our specialist will contact you within 24 hours.'); closeQualificationModal(); }
+        function handleQualificationSubmit(e) { e.preventDefault(); alert('🤝 Thank you! Our specialist will contact you within 24 hours.'); closeQualificationModal(); }
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         // PROFESSIONAL PERCENTAGE-BASED TIER SYSTEM
         // Scales intelligently across all rent ranges!
         // Budget renters: 5% threshold, Luxury renters: 8% threshold
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         function calculateDealScore(property, allFilteredProperties) {
             const currentYear = new Date().getFullYear();
             
@@ -3316,9 +3354,9 @@
                 };
             });
 
-            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+            // ============================================================================
             // APPLY PRICE RANGE FILTER (after calculating effectiveRent)
-            // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+            // ============================================================================
             filteredProperties = filterByPriceRange(filteredProperties);
 
             switch (sort) {
@@ -3332,7 +3370,7 @@
                     // Sort by score (highest first)
                     filteredProperties.sort((a, b) => b.dealScore - a.dealScore);
                     // Log top 5 for debugging
-                    console.log('ðŸ† TOP 5 BEST DEALS (Percentage-Based Tier System):');
+                    console.log('🏆 TOP 5 BEST DEALS (Percentage-Based Tier System):');
                     const hasPriceFilter = window.urlPriceRange && window.urlPriceRange !== 'any';
                     if (hasPriceFilter) {
                         console.log('&#x2713; BUDGET FILTER ACTIVE: Using quality-focused thresholds (5% under $2k, 7% $2k-3k, 10% over $3k)');
@@ -3343,7 +3381,7 @@
                         console.log(`   Quality: ${p.scoreBreakdown.quality.toFixed(1)} (Rating: ${p.scoreBreakdown.rating.toFixed(1)}, Age: ${p.scoreBreakdown.age.toFixed(1)}, Discount: ${p.scoreBreakdown.discount.toFixed(1)})`);
                         console.log(`   Price: $${p.scoreBreakdown.priceDifference.toFixed(0)} above cheapest (Tier: ${p.scoreBreakdown.tierThresholdPercent}% = $${p.scoreBreakdown.tierThreshold.toFixed(0)}) â†’ Penalty: ${p.scoreBreakdown.pricePenalty.toFixed(1)}, Bonus: ${p.scoreBreakdown.bonus}`);
                         if (p.scoreBreakdown.priceDifference <= p.scoreBreakdown.tierThreshold) {
-                            console.log(`   ðŸ’¡ Within ${p.scoreBreakdown.tierThresholdPercent}% tier - ranked by QUALITY only!`);
+                            console.log(`   💡 Within ${p.scoreBreakdown.tierThresholdPercent}% tier - ranked by QUALITY only!`);
                         }
                     });
                     break;
@@ -3402,10 +3440,10 @@
 
         document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
     
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         // URL PARAMETER SUPPORT - Auto-filter based on URL
         // Supports: ?bedrooms=1&propertyType=income-restricted
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         function getURLParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
@@ -3504,10 +3542,10 @@
         }
 
 
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         // PRICE RANGE FILTERING
         // Supports: ?price=under-1000, 1000-1500, 1500-2000, over-2000
-        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // ============================================================================
         function filterByPriceRange(properties) {
             if (!window.urlPriceRange) {
                 return properties; // No price filter applied
