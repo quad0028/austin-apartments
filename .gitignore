@@ -1,0 +1,6 @@
+# Local wrangler dev-server state (cache, tmp, local D1/KV). Never committed:
+# it is machine-local runtime junk, and the other repos in this fleet ignore
+# it the same way.
+.wrangler
+node_modules
+dist
