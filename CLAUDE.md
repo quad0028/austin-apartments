@@ -33,3 +33,8 @@ accuracy, or a review. Verify a subagent's result before reporting it.
   generated from the directory.
 - Street View imagery is never stored or cached. Pano IDs may be.
 - Ross says "merge"; only then merge.
+- Community card photo, in this order (Ross, 2026-09-12): a kitchen shot,
+  then a bathroom, then a bedroom. A bare room (a blank wall, a ceiling
+  fan, an empty corner) is not a card photo. Only when the community has
+  none of those does the card fall to the graded Street View frame, and
+  to the aerial view only when Street View has nothing usable.
